@@ -1,0 +1,28 @@
+import type { MDXComponents } from "mdx/types";
+import PostImage from "./posts/PostImage";
+
+export const MyMdxComponent : MDXComponents = {
+  h1: (props) => <h1 className="text-2xl font-bold my-6" {...props} />,
+  h2: (props) => <h2 className="text-xl font-bold mt-6 mb-4" {...props} />,
+  h3: (props) => <h3 className="text-lg font-semibold mt-6 mb-2" {...props} />,
+  p: (props) => <p className="text-md text-base leading-7 text-[var(--mainText)] mb-4" {...props} />,
+  code: (props) => (
+    <code className="bg-[var(--codeBackground)] text-[var(--codeForeground)] px-1 py-0.5 rounded text-sm font-mono" {...props} />
+  ),
+  pre: (props) => (
+    <pre className="rounded-lg bg-[#282c34] text-white p-2 overflow-x-auto my-6 text-sm" {...props} />
+  ),
+  blockquote: (props) => (
+    <blockquote
+      className="border-l-4 border-[var(--miniText)] pl-4 italic text-[var(--subText)] my-4"
+      {...props}
+    />
+  ),
+  hr: () => <hr className="my-8 border-t border-[var(--subText)]" />,
+  ul: (props) => <ul className="list-disc pl-6 mb-4" {...props} />,
+  ol: (props) => <ol className="list-decimal pl-6 mb-4" {...props} />,
+  li: (props) => <li className="my-1 text-sm mb-1 text-[var(--mainText)]" {...props} />,
+  a: (props) => <a className="underline text-[var(--links)]" {...props} />,
+  img: (props) => (<PostImage {...props} />)
+
+};
