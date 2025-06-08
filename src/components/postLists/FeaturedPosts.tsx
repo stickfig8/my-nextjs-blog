@@ -28,10 +28,11 @@ export default function FeaturedPosts({posts}: Props) {
     const handleDotClick = (i:number) => setIndex(i);
 
     return(
-        <section className="relative mb-15">
-            <h2 className="flex gap-3 text-3xl pb-5"><p>Featured</p><p className="font-bold">Posts</p></h2>
-            {/* control panel */}
-                <div className="absolute top-10 right-0 transform -translate-x-1/2 text-xs">
+        <section className="mb-8">
+            <div className="flex gap-5 item-center justify-between">
+                <h2 className="flex gap-3 text-3xl pb-5"><p>Featured</p><p className="font-bold">Posts</p></h2>
+                {/* control panel */}
+                <div className="flex item-center text-xs">
                     <button onClick={handlePrev} className="cursor-pointer px-2">〈</button>
                     {posts.map((_, i) => (
                         <button key={i} className="cursor-pointer mx-1 text-md" onClick={() => handleDotClick(i)} aria-label={`Go to slide ${i + 1}`}>
@@ -42,7 +43,8 @@ export default function FeaturedPosts({posts}: Props) {
                     )}
                     <button onClick={handleNext} className="cursor-pointer px-2">〉</button>
                 </div>
-
+            </div>
+            
             <div className="w-full overflow-hidden">
             {/* post panel */}
                 <div className="flex transition-transform duration-700 ease-in-out"
