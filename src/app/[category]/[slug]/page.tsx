@@ -7,6 +7,7 @@ import TopNavigator from "@/components/scroll/TopNavigator";
 import ScrollProgressBar from "@/components/scroll/ScrollProgressBar";
 import PostTags from "@/components/posts/PostTags";
 import PostContents from "@/components/posts/PostContents";
+import GiscusComments from "@/components/posts/GiscusComments";
 
 
 export const dynamicParams = false;
@@ -38,13 +39,14 @@ export default async function BlogPostPage({params} : {params: PostProps}) {
             <ScrollProgressBar />
             <Container>
                 <article className="relative">
-                <div id={data.meta.slug}>
-                    <section className="text-3xl font-bold">{data.meta.title}</section>
-                    <p className="text-sm mt-3 text-[var(--subText)]">[{data.meta.date}]</p>
-                    <TopNavigator toc={headings}/>
-                    <PostContents content={data.content} /> 
-                    {data.meta.tags && <PostTags data={data.meta.tags} />}
-                </div>
+                    <div id={data.meta.slug}>
+                        <section className="text-3xl font-bold">{data.meta.title}</section>
+                        <p className="text-sm mt-3 text-[var(--subText)]">[{data.meta.date}]</p>
+                        <TopNavigator toc={headings}/>
+                        <PostContents content={data.content} /> 
+                        {data.meta.tags && <PostTags data={data.meta.tags} />}
+                    </div>
+                    <GiscusComments />
                     <SideNavigator toc={headings}/>
                 </article>
             </Container>

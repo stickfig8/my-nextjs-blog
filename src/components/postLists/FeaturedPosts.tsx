@@ -28,7 +28,7 @@ export default function FeaturedPosts({posts}: Props) {
     const handleDotClick = (i:number) => setIndex(i);
 
     return(
-        <section className="relative mb-7">
+        <section className="relative mb-15">
             <h2 className="flex gap-3 text-3xl pb-5"><p>Featured</p><p className="font-bold">Posts</p></h2>
             {/* control panel */}
                 <div className="absolute top-10 right-0 transform -translate-x-1/2 text-xs">
