@@ -23,8 +23,21 @@ export async function generateMetadata({params} : {params: PostProps}): Promise<
     const {meta} = await getPostData(category, slug);
 
     return {
-        title: meta.title,
-        description: meta.desc
+        title: `${meta.title} | Hyeongyu's blog`,
+        description: meta.desc,
+        openGraph: {
+            title: `${meta.title} | Hyeongyu's blog`,
+            description: meta.desc,
+            images: ['/blog_thumbnail.jpg'],
+            type: "article"
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${meta.title} | Hyeongyu's blog`,
+            description: meta.desc,
+            images: ['/blog_thumbnail.jpg'],
+        }
+        
     }
 }
 

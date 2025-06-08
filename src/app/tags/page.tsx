@@ -5,7 +5,19 @@ import Link from "next/link";
 
 export function generateMetadata() {
     return {
-        title: "tags"
+        title: `Tags | Hyeongyu's blog`,
+        openGraph: {
+            title: ` Tags | Hyeongyu's blog`,
+            description: `tag list`,
+            images: ['/blog_thumbnail.jpg'],
+            type: "article"
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `Tags | Hyeongyu's blog`,
+            description: `tag list`,
+            images: ['/blog_thumbnail.jpg'],
+        }
     }
 }
 

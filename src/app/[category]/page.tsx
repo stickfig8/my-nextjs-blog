@@ -14,8 +14,22 @@ export function generateStaticParams() {
 
 export async function generateMetadata({params}: {params: CategoryProps}): Promise<Metadata> {
     const {category} = await params;
+    const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
+
     return {
-        title: category,
+        title: `${categoryName} | Hyeongyu's blog`,
+        openGraph: {
+            title: `${categoryName} | Hyeongyu's blog`,
+            description: `${categoryName} post list`,
+            images: ['/blog_thumbnail.jpg'],
+            type: "article"
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${categoryName} | Hyeongyu's blog`,
+            description: `${categoryName} post list`,
+            images: ['/blog_thumbnail.jpg'],
+        }
     }
 }
 
