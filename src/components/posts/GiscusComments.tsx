@@ -15,7 +15,7 @@ export default function GiscusComments() {
             repoId={process.env.NEXT_PUBLIC_GISCUS_REPO_ID!}
             category="Comments"
             categoryId={process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID!}
-            mapping="pathname"
+            mapping="og:title"
             strict='1'
             reactionsEnabled="1"
             emitMetadata="0"
