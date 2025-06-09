@@ -14,7 +14,7 @@ export default function ThemeToggleButton() {
 
     return(
         <button onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="w-[35px] h-[35px] mt-[7px] ml-auto rounded-full border-1 transition-[border-width] duration-200 ease-in-out items-center justify-center hover:border-3 cursor-pointer">
+            className="w-[35px] h-[35px] mt-[7px] rounded-full border-1 transition-[border-width] duration-200 ease-in-out items-center justify-center hover:border-3 cursor-pointer">
             {isDark ? 'D' : 'L'}
         </button>
     )
