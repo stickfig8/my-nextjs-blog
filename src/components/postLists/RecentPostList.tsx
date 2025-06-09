@@ -2,7 +2,7 @@ import { getLatestPostMetas } from "@/lib/postDataUtils";
 import PostList from "./PostList";
 
 
-export default function RecentPosts() {
+export default function RecentPostList() {
     const latestPosts = getLatestPostMetas(3);
 
     return(

@@ -8,7 +8,7 @@ type Props = {
     posts: PostMetaWithCategory[];
 }
 
-export default function FeaturedPosts({posts}: Props) {
+export default function FeaturedPostList({posts}: Props) {
     
     const [index, setIndex] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);

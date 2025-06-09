@@ -10,7 +10,8 @@ type Props = {
 }
 
 export default function SideNavigator({toc}: Props) {
-    const activeIds = useObserver(toc);
+    const tocWithComments = [...toc, {id: "comments", text:"댓글", level: 2}]; // 댓글 목차에 추가
+    const activeIds = useObserver(tocWithComments);
     
     return (
         <aside className='absolute -top-[150px] left-full -mb-[100px] hidden h-[110%] lg:block'>
@@ -18,7 +19,7 @@ export default function SideNavigator({toc}: Props) {
                 <nav className="text-sm mb-4 px-2 py-2 border-l">
                     <h2 className="text-base font-bold mb-2">목차</h2>                    
                     <ul className="space-y-1">
-                        {toc.map((heading) => (
+                        {tocWithComments.map((heading) => (
                             <li key={heading.id} className={`cursor-pointer hover:underline hover:text-[var(--foreground)] ${activeIds.includes(heading.id) ? "" : "text-[var(--subText)]"} ${heading.level === 3 ? "ml-4" : "ml-0"}`}
                                 onClick={() =>{scrollToHeading(heading);}}>                       
                                 {heading.text}
