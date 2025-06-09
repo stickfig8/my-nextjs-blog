@@ -6,7 +6,7 @@ type Props = {
 
 export default function ScrollButton({onClick, inner} : Props) {
     return (
-        <button onClick={onClick} className="text-lg bold cursor-pointer hover:scale-110 transition-transform duartion-300" >
+        <button onClick={onClick} className="text-lg bold cursor-pointer will-change-transform hover:scale-105 transition-transform duartion-300" >
             {inner}
         </button>
     )

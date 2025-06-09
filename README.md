@@ -4,4 +4,4 @@
 
 모바일 대응
 
-[링크](https://stickfig8blog.vercel.app/)
+[stickfig8blog](https://stickfig8blog.vercel.app/)
