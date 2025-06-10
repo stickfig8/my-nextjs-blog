@@ -17,7 +17,7 @@ export default function MobileHeaderPannel({isOpen, onClose} : Props) {
                 onClick={(e) => e.stopPropagation()}>
 
                 <div className="flex justify-end">
-                    <button onClick={onClose} className="mb-4 text-right w-fit font-bold cursor-pointer">✕</button>
+                    <button onClick={onClose} className="mb-4 text-right w-fit font-bold cursor-pointer active:scale-99 active:brightness-80">✕</button>
                 </div>
                 
                 <div className="flex flex-col gap-4">

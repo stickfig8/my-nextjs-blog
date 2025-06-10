@@ -51,7 +51,7 @@ export default function FeaturedPostList({posts}: Props) {
                     style={{ transform: `translateX(-${index * 100}%)`, width: `${100 * max}%` }}
                 >
                     {posts.map((post) => (
-                    <div key={post.slug} className="w-full flex-shrink-0 transition-transform duration-500 hover:-translate-y-1 hover:shadow-md">
+                    <div key={post.slug} className="w-full flex-shrink-0">
                         <PostCard post={post} />
                     </div>
                     ))}

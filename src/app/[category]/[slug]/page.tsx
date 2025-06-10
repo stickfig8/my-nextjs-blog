@@ -8,6 +8,7 @@ import ScrollProgressBar from "@/components/scroll/ScrollProgressBar";
 import PostTags from "@/components/posts/PostTags";
 import PostContents from "@/components/posts/PostContents";
 import GiscusComments from "@/components/posts/GiscusComments";
+import MobileScrollPannel from "@/components/scroll/MobileScrollPannel";
 
 
 export const dynamicParams = false;
@@ -61,6 +62,7 @@ export default async function BlogPostPage({params} : {params: PostProps}) {
                     </div>
                     <GiscusComments />
                     <SideNavigator toc={headings}/>
+                    <MobileScrollPannel />
                 </article>
             </Container>
         </>

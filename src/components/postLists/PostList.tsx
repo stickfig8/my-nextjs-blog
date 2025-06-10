@@ -10,8 +10,7 @@ export default function PostList({posts}: Props) {
     return(
         <ul className="space-y-6">
                 {posts.map((post) => (
-                    <li key={post.slug}
-                        className="group will-change-transform transition-transform duration-500 hover:-translate-y-1 hover:shadow-md">
+                    <li key={post.slug} >
                         <PostCard post={post} />
                     </li>
                 ))}

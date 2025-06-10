@@ -31,7 +31,7 @@ export default function TagsPage() {
             <ul className="space-y-2">
                 {sortedTags.map(([tag, count]) => 
                     <li key={tag}>
-                        <Link href={`/tags/${tag}`} className="text-lg text-[var(--mainText)] hover:underline hover:text-[var(--foreground)] underline-offset-4">
+                        <Link href={`/tags/${tag}`} className="text-lg text-[var(--mainText)] hover:underline hover:text-[var(--foreground)] underline-offset-4 active:scale-99 active:brightness-80">
                             #{tag} ({count})
                         </Link>
                     </li>
