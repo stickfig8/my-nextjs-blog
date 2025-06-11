@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import HeaderLink from "./HeaderLink";
-import ThemeToggleButton from "./ThemeToggleButton";
+import ThemeToggleButton from "../themes/ThemeToggleButton";
 import { useState } from "react";
 import MobileHeaderPannel from "./mobile/MoblieHeaderPannel";
 import MobileHeaderButton from "./mobile/MobileHeaderButton";

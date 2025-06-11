@@ -32,3 +32,6 @@ export type Heading = { //HTMLHeadingElement와 유사한 객체
     text: string;
     level: number;
 }
+
+
+export type ThemeOption = 'light' | 'dark' | 'system'; 

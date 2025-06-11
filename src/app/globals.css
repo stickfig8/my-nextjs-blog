@@ -6,6 +6,8 @@
   --font-dodum: "Gowun Dodum", sans-serif; 
   --foreground: #5a0417;
   --background: #f5ecd2;
+  --oppoBackground: #000000;
+  --oppoForeground: #c4a484;
   --mainText: #374151;
   --subText: #6b7280;
   --miniText: #9ca3af;
@@ -27,6 +29,8 @@ body {
 .dark {
   --background: #000000;
   --foreground: #c4a484;
+  --oppoForeground: #5a0417;
+  --oppoBackground: #f5ecd2;
   --mainText: #d1d5db;
   --subText: #9ca3af;
   --miniText: #6b7280;
