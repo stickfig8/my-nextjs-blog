@@ -26,9 +26,9 @@ export default function SideNavigator({toc}: Props) {
                             </li>
                         ))}
                     </ul>
-                    <div className="flex gap-5 ml-3 mt-1">
-                        <ScrollButton onClick={() => scrollToTop()} inner="△"/>
-                        <ScrollButton onClick={() => scrollToBottom()} inner="▽"/>
+                    <div className="flex gap-3 ml-3 mt-3">
+                        <ScrollButton onClick={() => scrollToTop()} destination="top"/>
+                        <ScrollButton onClick={() => scrollToBottom()} destination="bottom"/>
                     </div>
                 </nav> 
             </div>

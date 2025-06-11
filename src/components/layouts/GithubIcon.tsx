@@ -6,7 +6,7 @@ type Props = {
 export default function GithubIcon({width = 25, height = 25}: Props){
     return(
         <div className="flex justify-center my-2">
-            <a href="https://github.com/stickfig8" target="_blank" rel="noopener noreferrer" className="inline-block text-[var(--mainText)] hover:text-[var(--foreground)]">
+            <a href="https://github.com/stickfig8/" target="_blank" rel="noopener noreferrer" className="inline-block text-[var(--mainText)] hover:text-[var(--foreground)]">
                 <svg width={width} height={height} 
                     viewBox="0 0 98 96"
                     preserveAspectRatio="xMidYMid meet"

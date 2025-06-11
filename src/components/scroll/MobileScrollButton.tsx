@@ -1,12 +1,15 @@
+import ScrollIcon from "../icons/ScrollIcon";
+import { ScrollOption } from "@/config/iconTypes";
+
 type Props = {
     onClick: () => void;
-    inner: string;
+    destination: ScrollOption;
 }
 
-export default function MobileScrollButton({onClick, inner} : Props) {
+export default function MobileScrollButton({onClick, destination} : Props) {
     return (
-        <button onClick={onClick} className="border w-8 h-8 rounded-full border-2 text-xl bold shadow-md cursor-pointer will-change-transform active:scale-95 active:brightness-90 transition-transform duartion-100" >
-            {inner}
+        <button onClick={onClick} className="flex justify-center items-center cursor-pointer text-[var(--foreground)] hover:text-[var(--mainText)] active:scale-95 active:brightness-90" >
+            <ScrollIcon width={47} height={47} destination={destination} />
         </button>
     )
 }

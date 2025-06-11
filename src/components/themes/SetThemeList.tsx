@@ -1,4 +1,4 @@
-import { ThemeOption } from "@/config/types";
+import { ThemeOption } from "@/config/iconTypes";
 import { useTheme } from "next-themes";
 
 type Props = {
