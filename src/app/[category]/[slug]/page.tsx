@@ -29,14 +29,14 @@ export async function generateMetadata({params} : {params: PostProps}): Promise<
         openGraph: {
             title: `${meta.title} | Hyeongyu's blog`,
             description: meta.desc,
-            images: ['/blog_thumbnail.jpg'],
+            images: ['/assets/blog_thumbnail.jpg'],
             type: "article"
         },
         twitter: {
             card: 'summary_large_image',
             title: `${meta.title} | Hyeongyu's blog`,
             description: meta.desc,
-            images: ['/blog_thumbnail.jpg'],
+            images: ['/assets/blog_thumbnail.jpg'],
         }
         
     }

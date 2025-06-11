@@ -20,7 +20,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-dodum);
-  background-image: url('/wallpaper.png');
+  background-image: url('/assets/wallpaper.png');
   overflow-y: scroll;
 }
 

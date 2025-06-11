@@ -7,17 +7,21 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Hyeongyu's blog",
     description: "Front-end developer's blog.",
+    icons: {
+      icon:'/assets/blog_logo.png',
+      apple: '/assets/apple-touch-icon.png',
+    },
     openGraph: {
         title: "Hyeongyu's blog",
         description: "Front-end developer's blog.",
-        images: ["/blog_thumbnail.jpg"], // 메인 og:image
+        images: ["/assets/blog_thumbnail.jpg"], // 메인 og:image
         type: "website",
     },
     twitter: {
-        card: "summary_large_image", // 또는 summary
+        card: "summary_large_image", 
         title: "Hyeongyu's Blog",
         description: "Front-end developer's blog.",
-        images: ["/blog_thumbnail.jpg"],
+        images: ["/assets/blog_thumbnail.jpg"],
     },
 };
 

@@ -21,14 +21,14 @@ export async function generateMetadata({params}: {params: CategoryProps}): Promi
         openGraph: {
             title: `${categoryName} | Hyeongyu's blog`,
             description: `${categoryName} post list`,
-            images: ['/blog_thumbnail.jpg'],
+            images: ['/assets/blog_thumbnail.jpg'],
             type: "article"
         },
         twitter: {
             card: 'summary_large_image',
             title: `${categoryName} | Hyeongyu's blog`,
             description: `${categoryName} post list`,
-            images: ['/blog_thumbnail.jpg'],
+            images: ['/assets/blog_thumbnail.jpg'],
         }
     }
 }
