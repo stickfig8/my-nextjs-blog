@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
-
 import matter from "gray-matter";
+
 import { PostIdentifier, PostMeta, PostMetaWithCategory, Heading, PostData } from "@/config/types";
 import { FEATURED_POSTS } from "@/config/featured";
 

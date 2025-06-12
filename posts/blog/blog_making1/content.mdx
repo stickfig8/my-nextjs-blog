@@ -2,14 +2,16 @@
 title: Next.js 15 & Tailwind v4 블로그 제작기 (1)
 date: "2025-05-30"
 desc: 개인 블로그 만들기 1탄 (개요 + 블로그 설계)
-tags: ["블로그", "next", "tailwind", "react", "typescript"]
+tags: ["블로그", "next", "tailwind", "react", "typescript", "mdx"]
 ---
  
 ## 1. 개요
 ### -블로그를 만들어보자
-&nbsp;세상에는 많은 블로그 플랫폼이 있습니다. 많이들 사용하시는 ==tistory==, ==velog== 등도 있지만 개발자로써 직접 블로그를 만들어보고 고려해야 할 사항들을 느껴보고자 블로그를 직접 만들게 되었습니다.  
+&nbsp;세상에는 많은 블로그 플랫폼이 있습니다. 많이들 사용하시는 ==tistory==, ==velog== 등도 있지만 개발자로서 직접 블로그를 만들어보고 고려해야 할 사항들을 느껴보고자 블로그를 직접 만들게 되었습니다.  
 
 또한 ==Next.js== 기반의 ==SSG== 페이지를 만드는 공부를 하고 싶어 이를 염두에 두고 개발을 하였습니다. 사용자에 따라 다른 정보를 보여주지 않아도 되는 블로그는 이러한 관점에서 적합한 선택이라고 생각합니다.  
+
+블로그 제작기는 최대한 상세하게 기록할 계획이기 때문에 혹시 나만의 블로그를 만들고 싶거나 관심이 있으신 분들께 작게나마 도움이 되었으면 합니다. 또한 많은 분들의 피드백도 감사히 받겠습니다.
 
 기술 스택은 ==Next.js 15==, ==Tailwind v4==, 글 작성은 ==MDX==를 통해 작성하였습니다. 추후 배포는 ==vercel==로 진행하였습니다.
 
@@ -21,6 +23,8 @@ tags: ["블로그", "next", "tailwind", "react", "typescript"]
 - [junghyeonsu님 블로그](https://junghyeonsu.com/)
 - [D5BL5G님 블로그](https://d5br5.dev/)
 - [kyoyoung님 블로그](https://www.kyoyoung.dev/)
+
+*** 
 
 ## 2.개발 설계
 
@@ -58,6 +62,8 @@ tags: ["블로그", "next", "tailwind", "react", "typescript"]
 6. gray-matter 등으로 mdx파일을 읽어 컨텐츠를 문자열로 넘길 수 있고, frontmatter도 직접 파싱해서 처리 가능
 
 이러한 차이점에서 frontmatter를 따로 불러내어 정렬, 분류, 리스트화가 필요한 작업이 있다고 판단되어 mdx 파싱에는 ==next-mdx-remote==를 사용하게 되었습니다.
+
+*** 
 
 ## 마치며
 다음 게시물에는 ==next-mdx-remote==와 ==gray-matter==를 이용한 mdx 파싱과 이를 토대로 게시물 페이지와 게시물 리스트를 만드는 방법을 알아보도록 하겠습니다.

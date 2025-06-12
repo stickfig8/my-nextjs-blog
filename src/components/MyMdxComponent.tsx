@@ -7,10 +7,10 @@ export const MyMdxComponent : MDXComponents = {
   h3: (props) => <h3 className="text-xl font-semibold mt-6 mb-2" {...props} />,
   p: (props) => <p className="text-lg text-base leading-7 text-[var(--mainText)] mb-4 leading-10" {...props} />,
   code: (props) => (
-    <code className="bg-[var(--codeBackground)] text-[var(--codeForeground)] px-1 py-0.5 rounded-sm text-sm py-1 mx-1 font-mono" {...props} />
+    <code className="bg-[var(--codeBackground)] text-[var(--codeForeground)] px-1 py-0.5 rounded-sm text-sm py-1 mx-1 font-mono tracking-tight" {...props} />
   ),
   pre: (props) => (
-    <pre className="overflow-x-auto my-3 text-sm" {...props} />
+    <pre className="overflow-x-auto my-3 text-sm p-4 leading-relaxed" {...props} />
   ),
   blockquote: (props) => (
     <blockquote
@@ -22,7 +22,7 @@ export const MyMdxComponent : MDXComponents = {
   hr: () => <hr className="my-8 border-t border-[var(--subText)]" />,
   ul: (props) => <ul className="list-disc pl-6 mb-4" {...props} />,
   ol: (props) => <ol className="list-decimal pl-6 my-4" {...props} />,
-  li: (props) => <li className="my-1 text-base mb-1 text-[var(--mainText)]" {...props} />,
+  li: (props) => <li className="my-1 text-base mb-3 leading-8 text-[var(--mainText)]" {...props} />,
   a: (props) => <a className="underline text-[var(--links)]" {...props} />,
   img: (props) => (<PostImage {...props} />)
 

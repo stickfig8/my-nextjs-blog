@@ -4,7 +4,7 @@ pre code.hljs {
   
 }
 code.hljs {
-  padding: 3px 5px
+  padding: 8px 10px;
 }
 /*
 
@@ -28,7 +28,7 @@ hue-6-2: #e6c07b
 .hljs {
   color: #abb2bf;
   background: #282c34;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 .hljs-comment,
 .hljs-quote {

@@ -11,12 +11,12 @@
   --mainText: #374151;
   --subText: #6b7280;
   --miniText: #9ca3af;
-  --codeBackground: #374151;
-  --codeForeground: #FFBF00;
+  --codeBackground: #4C4F55;
+  --codeForeground: #FFD580;
   --tags: #ca8a04;
   --links: #4682B4;
-  --markBackground: #5A6371;
-  --markForeground: #DCDCDC;
+  --markBackground: #D6D3CD;
+  --markForeground: #111827;
   
 }
 
@@ -33,10 +33,11 @@ body {
   --foreground: #c4a484;
   --oppoForeground: #5a0417;
   --oppoBackground: #f5ecd2;
-  --codeForeground: #f472b6;
+  --codeBackground: #3B4048;
+  --codeForeground: #FFE585; 
   --mainText: #d1d5db;
   --subText: #9ca3af;
   --miniText: #6b7280;
-  --markBackground: #4B5563 ;
-  --markForeground: #DCDCDC;
+  --markBackground: #4B5563;
+  --markForeground: #E5E7EB;
 }
