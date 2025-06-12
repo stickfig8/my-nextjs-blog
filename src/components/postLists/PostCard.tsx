@@ -15,7 +15,7 @@ export default function PostCard({post}:Props) {
                     <p className="text-md text-[var(--subText)]">{post.desc}</p>
                 )}
                 {post.tags && post.tags.length > 0 && (
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
                         {post.tags.map((tag) => (
                             <span key={tag} className="text-sm text-[var(--subText)]">
                                 #{tag} 

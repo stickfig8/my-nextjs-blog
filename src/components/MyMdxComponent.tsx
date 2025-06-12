@@ -10,7 +10,7 @@ export const MyMdxComponent : MDXComponents = {
     <code className="bg-[var(--codeBackground)] text-[var(--codeForeground)] px-1 py-0.5 rounded-sm text-sm py-1 mx-1 font-mono tracking-tight" {...props} />
   ),
   pre: (props) => (
-    <pre className="overflow-x-auto my-3 text-sm p-4 leading-relaxed" {...props} />
+    <pre className="overflow-x-auto my-3 text-sm leading-relaxed" {...props} />
   ),
   blockquote: (props) => (
     <blockquote
