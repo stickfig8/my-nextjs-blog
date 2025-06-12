@@ -5,45 +5,65 @@ import { Heading } from "@/config/types";
 
 export default function useObserver(headings : Heading[]): string[] {
     const [activeIds, setActiveIds] = useState<string[]>([]);
-    const lastSeen = useRef<string | null>(null);
+    const idSet = useRef<Set<string>>(new Set());
+    
+    const lastScrollY = useRef(0);
+    const isScrollingDown = useRef(true);
 
     useEffect(() => {
-            // 감시의 범위, 감지 시 수행할 작업 설정
-            const idSet = new Set<string>();
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    const id = entry.target.id;
-                    if(!entry.isIntersecting ) { // 감시 안할때
-                        if(idSet.size > 1) {
-                            idSet.delete(id);
-                        } else {
-                            lastSeen.current = id;
-                        }
-                        
-                    } else { // 감시 할 때
-                        if(idSet.size === 1) {
-                            if(lastSeen.current) {
-                                idSet.delete(lastSeen.current);
-                            }
-                        }
-                        idSet.add(id);
-                    }
-                });
-    
-                setActiveIds(Array.from(idSet));
-                },
-                {
-                    rootMargin: "0px 0px -30% 0px",
-                    threshold: 0.1,
+        const handleScroll = () => {
+            const currentY = window.scrollY;
+            isScrollingDown.current = currentY > lastScrollY.current;
+            lastScrollY.current = currentY;
+        };
+        window.addEventListener('scroll', handleScroll);
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const id = entry.target.id;
+                if(!id) return;
+
+                const y = entry.boundingClientRect.y;
+
+                if(entry.isIntersecting && isScrollingDown.current) {
+                    idSet.current.add(id);
+                } else if(!entry.isIntersecting && y > 0) {
+                    idSet.current.delete(id);
                 }
-            );
-            // 감시 대상을 headings의 원소들로 설정
+            });
+            setActiveIds(Array.from(idSet.current));
+            }, 
+            {
+                rootMargin: "0px 0px -50% 0px",
+                threshold: 0.1,
+            }
+        );
+
+        const applyInitialVisibleHeadings = () => {
             headings.forEach((heading) => {
+                const el = document.getElementById(heading.id);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+
+                    if(rect.y < 0) {
+                        idSet.current.add(heading.id);
+                    }
+                }
+            })
+        }
+
+        applyInitialVisibleHeadings();
+
+        headings.forEach((heading) => {
                 const element = document.getElementById(heading.id);
                 if(element) observer.observe(element);
-            })
-            return () => observer.disconnect();
-        }, [headings]); // heading이 변할 일은 없지만 혹시 모를 동적 mdx나 라우팅 대비
+        });
 
-        return activeIds;
+        return() => {
+            window.removeEventListener('scroll', handleScroll); 
+            observer.disconnect();
+        }
+    }, [headings]);
+
+    return activeIds;
 }

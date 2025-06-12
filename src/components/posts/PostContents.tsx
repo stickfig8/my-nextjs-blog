@@ -5,6 +5,7 @@ import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
 import rehypeSlug from "rehype-slug";
 import rehypeHighlight from "rehype-highlight";
+import {remarkMark} from "remark-mark-highlight";
 
 type Props = {
     content: string;
@@ -17,7 +18,7 @@ export default function PostContents({content}: Props) {
                 components={MyMdxComponent}
                     options={{
                         mdxOptions: {
-                            remarkPlugins: [remarkGfm, remarkBreaks],
+                            remarkPlugins: [remarkGfm, remarkBreaks, remarkMark],
                             rehypePlugins: [rehypeHighlight, rehypeSlug],
                         },
                     }} 

@@ -12,9 +12,11 @@
   --subText: #6b7280;
   --miniText: #9ca3af;
   --codeBackground: #374151;
-  --codeForeground: #f472b6;
+  --codeForeground: #FFBF00;
   --tags: #ca8a04;
-  --links: #2563eb;
+  --links: #4682B4;
+  --markBackground: #5A6371;
+  --markForeground: #DCDCDC;
   
 }
 
@@ -31,8 +33,10 @@ body {
   --foreground: #c4a484;
   --oppoForeground: #5a0417;
   --oppoBackground: #f5ecd2;
+  --codeForeground: #f472b6;
   --mainText: #d1d5db;
   --subText: #9ca3af;
   --miniText: #6b7280;
-  --codeForeground: #ec4899;
+  --markBackground: #4B5563 ;
+  --markForeground: #DCDCDC;
 }

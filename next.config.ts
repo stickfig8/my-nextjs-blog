@@ -2,6 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
+  
+  // turbopack 설정
   experimental: {
     turbo: {
       rules: {
