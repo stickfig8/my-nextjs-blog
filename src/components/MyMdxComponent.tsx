@@ -4,7 +4,7 @@ import PostImage from "./posts/PostImage";
 export const MyMdxComponent : MDXComponents = {
   h1: (props) => <h1 className="text-2xl font-bold my-6" {...props} />,
   h2: (props) => <h2 className="text-2xl font-bold mt-6 mb-4" {...props} />,
-  h3: (props) => <h3 className="text-xl font-semibold mt-6 mb-2" {...props} />,
+  h3: (props) => <h3 className="text-xl font-bold mt-9 mb-2" {...props} />,
   p: (props) => <p className="text-lg text-base leading-7 text-[var(--mainText)] mb-4 leading-10" {...props} />,
   code: (props) => (
     <code className="bg-[var(--codeBackground)] text-[var(--codeForeground)] px-1 py-0.5 rounded-sm text-sm py-1 mx-1 font-mono tracking-tight" {...props} />

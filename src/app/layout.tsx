@@ -1,8 +1,21 @@
 import "./globals.css";
+import { Gothic_A1, Gowun_Dodum } from 'next/font/google';
 import BlogHeader from "../components/layouts/BlogHeader";
 import BlogFooter from "../components/layouts/BlogFooter";
 import { ModeThemeProvider } from "@/provider/ModeThemeProvider";
 import { Metadata } from "next";
+
+const gothicA1 = Gothic_A1({
+  weight: ['400'], 
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+const gowunDodum = Gowun_Dodum({
+  weight: ['400'],
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
     title: "Hyeongyu's blog",
@@ -28,7 +41,7 @@ export const metadata: Metadata = {
 export default function RootLayout({children, }: Readonly<{children: React.ReactNode;}>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body className="px-5">
+      <body className={`${gowunDodum.className} ${gothicA1.className} px-1`}>
         <ModeThemeProvider>
           <BlogHeader />
             {children}

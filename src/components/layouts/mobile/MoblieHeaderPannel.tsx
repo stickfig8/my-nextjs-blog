@@ -13,7 +13,7 @@ export default function MobileHeaderPannel({isOpen, onClose} : Props) {
             <aside className={`fixed top-0 left-0 h-full w-[45%] bg-[var(--background)] shadow-md p-4
                     transform transition-transform duration-300 ease-in-out
                     ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
-                style={{ backgroundImage: "url('assets/wallpaper.png')" }}
+                style={{ backgroundImage: "url('/assets/wallpaper.png')" }}
                 onClick={(e) => e.stopPropagation()}>
 
                 <div className="flex justify-end">

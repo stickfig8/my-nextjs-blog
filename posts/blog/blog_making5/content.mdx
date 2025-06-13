@@ -1,0 +1,190 @@
+---
+title: Next.js 15 & Tailwind v4 블로그 제작기 (5)
+date: "2025-06-06"
+desc: 개인 블로그 만들기 5탄 (테마, 스크롤 진행바 등)
+tags: ["블로그", "next", "tailwind", "next-theme"]
+---
+
+## 1. 다크모드 개발
+&nbsp;요즘에는 다크모드가 없는 웹사이트를 찾기가 더 힘든 추세입니다. 
+사용자가 지정하는 테마 뿐만 아니라 사용자의 기기의 테마를 감지하고 이를 토대로 테마를 적용하는 것은 좋은 UX를 불러온다고 생각합니다.
+이번 블로그 프로젝트에도 ==light==, ==dark==, ==system== 테마를 적용해 보도록 하겠습니다.
+
+### -next-theme
+&nbsp;아주 편리하게도 ==Nextjs==에는 ==next-theme==이라는 라이브러리가 있습니다. 
+이는 ==React Context==기반으로 작동하여 간편하고 안정적으로 테마를 전역에서 관리가 가능하고, ==SSR==기반의 ==Nextjs==에서 깜빡거리며 작동하지 않는 장점이 있습니다(==Hydration==처리 우수). 또한 시스템 테마 감지와 로컬 저장을 지원합니다. 
+작동 형태를 알아보겠습니다.
+
+### -ThemeProvider
+>src/provider/ModeThemeProvider.tsx
+```ts
+'use client';
+
+import { ThemeProvider } from "next-themes";
+import React from "react";
+
+export function ModeThemeProvider({children}: {children:React.ReactNode}) {
+    return(
+        <ThemeProvider attribute='class' defaultTheme='system' enableSystem={true}>
+            {children}
+        </ThemeProvider>
+    )
+}
+``` 
+&nbsp;상기의 코드가 테마를 제공하는 ==provider==입니다. 
+속성의 `attribute='class'`는 =next-theme=이 각 테마일때 ==Html==태그에 어떤 종류의 속성으로 테마를 전달하는지 결정합니다.
+위의 경우는 다크모드로 전환 시 ==Html==태그에 `class='dark'`이런 식으로 속성값이 붙습니다. 우리는 여기서 붙은 `class`의 이름을 기반으로 스타일링을 할 수 있습니다. 자세한 건 후술하겠습니다.
+다른 속성으로는 `defaultTheme='system'`과 `enableSystem={true}` 두 속성이 있습니다. 두 속성 전부 ==system== 즉, 브라우저나 OS의 테마를 적용하는데 사용합니다.
+전자는 초기 테마를 ==system==으로 결정하고, 후자는 ==system==의 테마를 실제로 적용할지 결정합니다.  
+
+&nbsp;이후 적용은 ==React Context==와 동일합니다. 원하는 위치에서 원하는 범위를 ==ThemeProvider==로 감싸주면 됩니다.
+
+### -useTheme()
+>src/components/themes/ThemeToggleButton.tsx 중 일부
+```ts
+'use client';
+
+import { useTheme } from "next-themes";
+import { useEffect, useRef, useState } from "react";
+import ThemeIcon from "../icons/ThemeIcon";
+import { ThemeOption } from "@/config/types";
+import SetThemeList from "./SetThemeList";
+
+
+export default function ThemeToggleButton() {
+    const {theme, setTheme} = useTheme();
+    const [mounted, setMounted] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+    //중략
+    const handleSelect = (theme: ThemeOption) => {
+        setTheme(theme);
+        setIsOpen(false);
+    }
+
+    return(
+        <div className="relative" ref={ref}>
+            <button onClick={() => setIsOpen(!isOpen)}
+                {theme == 'dark' ? <ThemeIcon name='dark' /> 
+                : theme === 'light' ? <ThemeIcon name='light' /> 
+                : <ThemeIcon name='system' />}
+            </button>
+            {isOpen && (
+                <div>
+                    <ul className="flex flex-col">
+                        <SetThemeList name="light" onClick={handleSelect} />
+                        <SetThemeList name="dark" onClick={handleSelect} />
+                        <SetThemeList name="system" onClick={handleSelect} />          
+                    </ul>
+                </div>
+            )}
+        </div>
+    )
+}
+```
+&nbsp;전체 코드는 [stickfig8/my-nextjs-blog](https://github.com/stickfig8/my-nextjs-blog)에서 보실 수 있습니다.
+우리가 주목할 것은 ``useTheme()`` 입니다. 우리에게 익숙한 `useContext()`처럼 구조분해 할당으로 테마의 여러 값이나 제어 함수를 받을 수 있습니다.
+개중에 주로 사용하는 것들은 `theme`, `setTheme`, `resolvedTheme` 등이 있습니다.
+
+- `theme` : 현재 선택된 테마 이름(예: 'light', 'dark', 'system'등..)
+- `setTheme` : 테마를 변경하는 함수. 매개변수로 테마의 이름을 입력 (예: `setTheme('light'))
+- `resolvedTheme`: 최종 적용 중인 테마 (예: `theme === 'system'`이면 실제 시스템의 테마를 적용한 테마 이름)
+
+그 이외에도 `systemTheme`, `themes`도 있으니 자유롭게 사용하시면 됩니다.  
+
+&nbsp;테마의 제어는 이런식으로 할 수 있습니다. 원하는 테마를 `setTheme()`으로 적용하고, 현재 테마의 값을 `theme`으로 전달 받을 수 있습니다.
+
+### -스타일링
+&nbsp;앞서 설명드린 대로 ==next-theme==은 ==Html==태그에 속성을 붙여서 테마 적용을 한다고 설명했고, 저는 ==class==속성에 테마 적용을 하였습니다.
+&nbsp;이렇게 하면 ==Tailwind==로 `<div className="dark:bg-black dark:text-white">`처럼 dark:프리픽스를 이용해서 쉽게 적용할 수 있지만, 저는 하나의 파일에서 일관적으로 스타일을 관리하고 싶어
+>src/app/global.css
+```css
+:root {
+  --foreground: #5a0417;
+  --background: #f5ecd2;
+  --mainText: #374151;
+  --subText: #6b7280;
+   
+}
+.dark {
+  --background: #000000;
+  --foreground: #c4a484;
+  --mainText: #d1d5db;
+  --subText: #9ca3af;
+}
+```
+이런식으로 구성했습니다. `theme`이 ==dark==가 되면, ==next-theme==이 ==Html==태그에 `class='dark'`속성을 붙이게 되고, 자연스레 ==global.css==의 ==dark==클래스 스타일링을 따라가게 됩니다.
+
+***
+
+## 2. 스크롤 프로그레스 바
+&nbsp;블로그하면 또 빠지기 쉽지않은게 상단의 스크롤 프로그레스바 라고 생각합니다. 큰 의미가 있진 않지만, 소소하게 완성도를 쌓아가는 것도 가치가 있다고 생각합니다. 간단하게 이를 구현해보겠습니다. 
+
+### -useScrollPercent()
+&nbsp;기본적으로 스크롤 위치 같은 것은 페이지가 렌더링이 완료되야 관측할 수 있습니다. 따라서 useEffect()를 사용해주고, 이를 ==hook==폴더에 저장해줍니다.
+>src/hook/useScrollPercent.tsx
+```ts
+'use client'
+
+import { useEffect, useState } from "react"
+
+export default function useScrollPercent() {
+    const [scrollPercent, setScrollPercent] = useState<number>(0);
+
+    useEffect(() => {
+        function updateScroll() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = (scrollTop / docHeight) * 100;
+            setScrollPercent(scrolled);
+        };
+        window.addEventListener('scroll', updateScroll);
+        updateScroll();
+        
+        return () => window.removeEventListener('scroll', updateScroll);
+    }, []);
+
+    return scrollPercent;
+}
+```
+
+간단합니다. ==viewport==의 맨 위의 스크롤 위치(`scrollTop`)를 저장하고, ==DOM==의 스크롤 높이에서 ==viewport==크기만큼 뺀 값(`docHeight`)을 저장하며 둘이 나누어 백분율을 내줍니다.
+
+### -ScrollProgressBar
+&nbsp;useScrollPercent()에서 반환한 스크롤 위치의 백분율은 
+>src/components/scroll/ScrollProgressBar.ts
+```ts
+'use client'
+
+import useScrollPercent from "@/hook/useScrollPercent"
+
+export default function ScrollProgressBar() {
+    const scrollPercent = useScrollPercent();
+    
+    return (
+        <div className="fixed top-0 left-0 w-full h-1.5 z-50 bg-transparent">
+            <div className="h-full bg-[var(--foreground)] transition-all ease-linear"
+                style={{width: `${scrollPercent}%`}}></div>
+
+        </div>
+    )
+}
+```
+에서 ==div==의 넓이에 사용됩니다. ==hook==에서 보낸 스크롤 위치의 퍼센트 값만큼 너비를 지정해주면 간단히 스크롤 프로그레스바를 완성시킬 수 있습니다.
+
+***
+
+## 3. 기타 등등
+&nbsp;이외에도 블로그를 완성도 있게 채울 수 있는 방법은 많습니다.
+이외에도 제가 구현한 기능들에는
+- 헤더 모바일 반응형 구축(뷰포트 작아지면 좌측에서 슬라이드 하는 헤더 메뉴)
+- 메인화면 Featured Posts 슬라이드
+- @svgr/webpack을 이용한 svg 아이콘 컴포넌트 이용 (next 프로젝트 설정 시 turbopack을 쓰시는 분들은 webpack과 다르게 추가 설정을 해주셔야 합니다. [참고](https://github.com/vercel/turborepo/issues/4832))
+
+등등.. 
+대부분 ==Tailwind==를 이용한 스타일이나 애니메이션이라 따로 게시물을 올리진 않겠습니다. 관심있으시면 [stickfig8/my-nextjs-blog](https://github.com/stickfig8/my-nextjs-blog)로 찾아와주세요.
+
+***
+
+## 4. 마치며
+&nbsp;이번 게시물에서는 ==next-theme==을 이용한 테마기능과 스크롤 프로그레스바를 구현하는 방법에 대해 알아보았습니다. 다음 게시물에서는 ==SSG==를 설정하는 방법과, 페이지의==metadata==설정, 그리고 ==openGraph==설정방법에 대해 알아보겠습니다.
