@@ -3,7 +3,7 @@ import fs from "fs";
 import matter from "gray-matter";
 
 import { PostIdentifier, PostMeta, PostMetaWithCategory, Heading, PostData } from "@/config/types";
-import { FEATURED_POSTS } from "@/config/featured";
+import { FEATURED_POSTS } from "../config/featured";
 
 const postDirectory = path.join(process.cwd(), 'posts');
 
@@ -140,4 +140,14 @@ export function getFeaturedPosts(): PostMetaWithCategory[] {
         return meta ? { ...meta, category } : null;
         })
         .filter(Boolean) as PostMetaWithCategory[];
+}
+
+export function getAllPostMetas() : PostMeta[] {
+    const slugs = getAllSlugs();
+    const postMetas = slugs.map((slug) => {
+        const meta = getPostMeta(slug.category, slug.slug);
+        return meta;
+    }).filter(Boolean) as PostMeta[];
+
+    return postMetas;
 }

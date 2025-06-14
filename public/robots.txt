@@ -1,0 +1,17 @@
+# google
+User-agent: Googlebot
+Allow: /
+
+# naver
+User-agent: Yeti
+Allow: /
+
+# *
+User-agent: *
+Disallow: /
+
+# Host
+Host: https://stickfig8blog.vercel.app
+
+# Sitemaps
+Sitemap: https://stickfig8blog.vercel.app/sitemap.xml
