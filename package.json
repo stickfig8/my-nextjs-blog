@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build:rss": "tsc -p tsconfig.rss.json",
-  "generate:rss": "npm run build:rss && node dist/scripts/generate-rss.js",
+    "generate:rss": "npm run build:rss && node dist/scripts/generate-rss.js",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
@@ -14,6 +14,7 @@
   "dependencies": {
     "@giscus/react": "^3.1.0",
     "@tailwindcss/typography": "^0.5.16",
+    "dotenv": "^16.5.0",
     "gray-matter": "^4.0.3",
     "highlight.js": "^11.11.1",
     "next": "15.3.2",
