@@ -1,4 +1,4 @@
-import { getPostData, getAllSlugs, extractHeadingsFromMDX} from "@/lib/postDataUtils"
+import { getPostData, getAllSlugs, extractHeadingsFromMDX, getAdjacentPosts} from "@/lib/postDataUtils"
 import Container from "@/components/layouts/Container";
 import { PostProps } from "@/config/types";
 import { Metadata } from "next";
@@ -9,6 +9,7 @@ import PostTags from "@/components/posts/PostTags";
 import PostContents from "@/components/posts/PostContents";
 import GiscusComments from "@/components/posts/GiscusComments";
 import MobileScrollPannel from "@/components/scroll/MobileScrollPannel";
+import PostNextPrev from "@/components/posts/PostNextPrev";
 
 
 export const dynamicParams = false;
@@ -47,6 +48,7 @@ export default async function BlogPostPage({params} : {params: PostProps}) {
 
     const data = getPostData(category, slug);
     const headings = extractHeadingsFromMDX(data.content);
+    const adjacents = getAdjacentPosts(category, slug);
 
     return (
         <>
@@ -59,6 +61,7 @@ export default async function BlogPostPage({params} : {params: PostProps}) {
                         <TopNavigator toc={headings}/>
                         <PostContents content={data.content} /> 
                         {data.meta.tags && <PostTags data={data.meta.tags} />}
+                        <PostNextPrev next={adjacents.next} prev={adjacents.prev} />
                     </div>
                     <GiscusComments />
                     <SideNavigator toc={headings}/>

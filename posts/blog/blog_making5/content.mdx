@@ -32,7 +32,7 @@ export function ModeThemeProvider({children}: {children:React.ReactNode}) {
 }
 ``` 
 &nbsp;상기의 코드가 테마를 제공하는 ==provider==입니다. 
-속성의 `attribute='class'`는 =next-theme=이 각 테마일때 ==Html==태그에 어떤 종류의 속성으로 테마를 전달하는지 결정합니다.
+속성의 `attribute='class'`는 ==next-theme==이 각 테마일때 ==Html==태그에 어떤 종류의 속성으로 테마를 전달하는지 결정합니다.
 위의 경우는 다크모드로 전환 시 ==Html==태그에 `class='dark'`이런 식으로 속성값이 붙습니다. 우리는 여기서 붙은 `class`의 이름을 기반으로 스타일링을 할 수 있습니다. 자세한 건 후술하겠습니다.
 다른 속성으로는 `defaultTheme='system'`과 `enableSystem={true}` 두 속성이 있습니다. 두 속성 전부 ==system== 즉, 브라우저나 OS의 테마를 적용하는데 사용합니다.
 전자는 초기 테마를 ==system==으로 결정하고, 후자는 ==system==의 테마를 실제로 적용할지 결정합니다.  
@@ -49,7 +49,6 @@ import { useEffect, useRef, useState } from "react";
 import ThemeIcon from "../icons/ThemeIcon";
 import { ThemeOption } from "@/config/types";
 import SetThemeList from "./SetThemeList";
-
 
 export default function ThemeToggleButton() {
     const {theme, setTheme} = useTheme();

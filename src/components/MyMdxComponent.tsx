@@ -14,7 +14,8 @@ export const MyMdxComponent : MDXComponents = {
   ),
   blockquote: (props) => (
     <blockquote
-      className="border-l-4 border-[var(--miniText)] pl-4 italic text-[var(--subText)] my-4"
+      className="border-l-4 border-[var(--miniText)] pl-4 italic text-[var(--subText)] my-4 break-words"
+      style={{ wordBreak: 'break-word' }}
       {...props}
     />
   ),

@@ -76,7 +76,7 @@ export type Heading = { //HTMLHeadingElement와 유사한 객체
 
 ### -observer 적용
 &nbsp;스크롤 위치 추적을 위해서 observer를 설정해줍니다. 
-제가 사용한 방법은 `IntersectionObserver``로, ==DOM==요소가 ==viewport==나 특정 부모 요소 안에 들어왔거나 나갔는지를 감지하는 ==API==입니다.
+제가 사용한 방법은 `IntersectionObserver`로, ==DOM==요소가 ==viewport==나 특정 부모 요소 안에 들어왔거나 나갔는지를 감지하는 ==API==입니다.
 >src/hook/useObserver.ts
 ```ts
 const observer = new IntersectionObserver((entries) => {

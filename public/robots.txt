@@ -1,14 +1,6 @@
-# google
-User-agent: Googlebot
-Allow: /
-
-# naver
-User-agent: Yeti
-Allow: /
-
 # *
 User-agent: *
-Disallow: /
+Allow: /
 
 # Host
 Host: https://stickfig8blog.vercel.app

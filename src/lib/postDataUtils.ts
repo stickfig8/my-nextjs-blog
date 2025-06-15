@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import matter from "gray-matter";
 
-import { PostIdentifier, PostMeta, PostMetaWithCategory, Heading, PostData } from "@/config/types";
+import { PostIdentifier, PostMeta, PostMetaWithCategory, Heading, PostData, AdjacentPosts } from "@/config/types";
 import { FEATURED_POSTS } from "../config/featured";
 
 const postDirectory = path.join(process.cwd(), 'posts');
@@ -150,4 +150,14 @@ export function getAllPostMetas() : PostMeta[] {
     }).filter(Boolean) as PostMeta[];
 
     return postMetas;
+}
+
+export function getAdjacentPosts(category: string, postName: string) : AdjacentPosts {
+    const posts = getPostMetasByCategory(category);
+    const index = posts.findIndex((post) => post.slug === postName);
+
+    return {
+        next: index > 0 ? posts[index - 1] : null,
+        prev: index < posts.length - 1 ? posts[index + 1] : null
+    }
 }

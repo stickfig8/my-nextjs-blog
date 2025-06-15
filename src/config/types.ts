@@ -19,6 +19,11 @@ export type PostIdentifier = {
   slug: string;  
 }
 
+export type AdjacentPosts = {
+  prev : PostMetaWithCategory | null;
+  next : PostMetaWithCategory | null;
+}
+
 export type PostMetaWithCategory = PostMeta & {category: string};
 
 export type PostProps = Promise<{category: string, slug: string}>;
