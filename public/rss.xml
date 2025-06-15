@@ -5,7 +5,7 @@
             <link>undefined</link>
             <description>Front-end developer's blog</description>
             <language>ko</language>
-            <lastBuildDate>Sun, 15 Jun 2025 13:20:54 GMT</lastBuildDate>
+            <lastBuildDate>Sun, 15 Jun 2025 20:02:34 GMT</lastBuildDate>
             <generator>Next.js RSS Generator</generator>
             
         <item>
@@ -41,6 +41,13 @@
             <link>undefined/undefined/blog_making5</link>
             <pubDate>Fri, 06 Jun 2025 00:00:00 GMT</pubDate>
             <description>개인 블로그 만들기 5탄 (테마, 스크롤 진행바 등)</description>
+        </item>
+    
+        <item>
+            <title>Next.js 15 &amp; Tailwind v4 블로그 제작기 (6)</title>
+            <link>undefined/undefined/blog_making6</link>
+            <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
+            <description>개인 블로그 만들기 6탄 (SSG, 메타데이터, Open Graph)</description>
         </item>
     
         <item>

@@ -18,7 +18,10 @@ const gowunDodum = Gowun_Dodum({
 });
 
 export const metadata: Metadata = {
-    title: "Hyeongyu's blog",
+    title: {
+      default:"Hyeongyu's blog",
+      template: "%s | Hyeongyu's blog"
+    },
     description: "Front-end developer's blog.",
     icons: {
       icon:'/assets/blog_logo.png',

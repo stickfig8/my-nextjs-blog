@@ -17,7 +17,7 @@ export async function generateMetadata({params}: {params: CategoryProps}): Promi
     const categoryName = category.charAt(0).toUpperCase() + category.slice(1);
 
     return {
-        title: `${categoryName} | Hyeongyu's blog`,
+        title: `${categoryName}`,
         openGraph: {
             title: `${categoryName} | Hyeongyu's blog`,
             description: `${categoryName} post list`,

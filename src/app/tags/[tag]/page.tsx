@@ -13,7 +13,7 @@ export function generateStaticParams() {
 export async function generateMetadata({params}: {params: TagProps}) {
     const {tag} = await params;
     return {
-        title: `#${tag} | Hyeongyu's blog`,
+        title: `#${tag}`,
         openGraph: {
             title: `#${tag} | Hyeongyu's blog`,
             description: `#${tag} post list`,
