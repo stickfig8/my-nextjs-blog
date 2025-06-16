@@ -1,0 +1,200 @@
+---
+title: Next.js 15 & Tailwind v4 블로그 제작기 (7)
+date: "2025-06-12"
+desc: 개인 블로그 만들기 7탄 (배포, SEO)
+tags: ["blog_making", "next", "vercel", "SEO", "sitemap", "rss"]
+---
+
+## 1. 배포
+&nbsp;이제 성공적으로 블로그를 제작한 것 같으니 배포를 진행해보겠습니다. 배포 플랫폼은 ==Vercel==을 선정했습니다.
+
+### -Vercel
+&nbsp;==Vercel==은 ==Nextjs==의 제작사이자, 그곳헤서 제공하는 ==Nextjs==에 최적화 된 공식 배포 플랫폼입니다. 따라서 ==RSC==기반 ==SSR== / ==SSG== 자동 분기 등 타 배포 플랫폼에 비해 ==Nextjs==에 대한 이해도가 높습니다.
+이러한 요인들로 인해 배포 플랫폼을 ==Vercel==로 선택하게 되었습니다. (개인적으로 사용하기 편하기도 하고요)
+
+### -배포 방법
+&nbsp;배포 방법은 매우 간단합니다. 간단히 살펴보면
+1. ==GitHub==에 저장소를 생성하고 코드를 Push
+1. ==Vercel==에서 계정 생성 후 Dashboard로 가서 우측에 있는 Add New의 Project 클릭
+1. Import Git Repository에서 프로젝트 저장소 Import
+1. 프로젝트명과 환경변수나 빌드 옵션 정도 입력하고 끝!
+
+>기본 도메인은 [프로젝트명].vercel.app으로 설정됩니다.
+
+이러면 너무나도 간단히 프로젝트가 배포됩니다. 이후 ==GitHub==에 코드를 Push할 때마다 자동으로 ==Vercel==이 이를 감지하고 빌드하여 재배포 해줍니다.
+이제 로컬 환경이 아닌 진짜 웹페이지가 만들어졌으므로 ==SEO==를 설정해줍니다.
+
+***
+
+## 2. SEO
+&nbsp;==SEO==(Search Engine Optomization)는 검색 엔진 최적화라는 뜻으로, ==Google==, ==Naver==등과 같은 검색 엔진이 웹사이트를 더 잘 수집하고 더 높은 순위로 노출시키도록 만드는 모든 전략과 기술을 말합니다.
+이는 대부분의 웹페이지에 필요한 옵션이며, 많은 사람들이 글을 읽으면 좋은 블로그도 예외는 아닐 것입니다. 이 ==SEO==를 실천하기 위한 요소에는 여러가지가 있습니다.
+- metadata
+- 시멘틱 마크업
+- sitemap.xml / rss.xml / robots.txt
+- SSG
+- 코드 최적화
+
+등등...
+
+==metadata==와 ==SSG==는 우리가 전 게시물인 [Next.js 15 & Tailwind v4 블로그 제작기 (6)](https://stickfig8blog.vercel.app/blog/blog_making6)에서 다루었습니다. ==시멘틱 마크업==같은 경우는 웹 크롤러가 콘텐츠 구조를 명확히 이해하는데 중요하지만, 이는 개발 단계에서 신경쓰며 개발 하는 방법이 가장 이상적입니다.
+따라서 ==sitemap.xml==과 ==robots.txt==, ==rss.xml==을 생성하는 방법에 대해 알아보고, 이를 등록하는 방법에 대해 알아보겠습니다.
+
+***
+
+## 3. sitemap
+&nbsp;==sitemap==(사이트맵)은 웹사이트에 있는 모든 주요 페이지의 목록을 포함하는 파일입니다. 이걸 검색엔진 등에 제출하면, 크롤러가 우리의 사이트 구조를 이해하고 더 효율적으로 크롤링할 수 있습니다. 쉽게말해 정말 site의 map(지도)인거죠
+이 중에서 ==xml sitemap==이 ==SEO==를 위한 도구로 이용됩니다. 이 파일을 프로젝트의 ==public== 폴더에 넣으면 됩니다. 하지만 직접 만드는건 너무 비효율적이고 불편하므로 자동으로 생성해봅시다.
+
+### -생성
+&nbsp;==Nextjs==에는 편리하게도 ==sitemap.xml==을 자동으로 생성해주는 패키지가 있습니다. 사용 법에 대해 알아보겠습니다.
+먼저 패키지를 설치해줍니다.
+```bash
+npm install next-sitemap
+```
+그리고 프로젝트 루트에 ==next-sitemap-config.js==파일을 생성해주고 그 안에
+```js
+/** @type {import('next-sitemap').IConfig} */
+module.exports = {
+  siteUrl: 'YOUR_BLOG_URL',
+  generateRobotsTxt: true,
+  sitemapSize: 7000, // default
+  changefreq: 'weekly',
+  priority: 0.7,
+};
+```
+이렇게 작성해줍니다.
+
+이후 ==package.json==으로 가서 빌드 후에 ==sitemap==을 생성하게끔 스크립트에 추가해줍니다.
+>/package.json
+```json
+{ 
+    "scripts" : {
+        //중략
+        "postbuild": "next-sitemap,
+    }
+}
+```
+이렇게 하면 빌드 후 자동으로 ==public==폴더에 ==sitemap.xml==과 ==robots.txt==가 생성된 것을 볼 수 있습니다.
+이를 배포하고나서 ==블로그URL/sitemap.xml==로 접속해보면
+![sitemap생성 완료](/postImgs/blog/blog_making7/sitemap.png)
+무사히 잘 생성된 것을 확인 할 수 있습니다.
+이렇게 생긴 ==sitemap.xml==은 각 검색 엔진에 등록하는데에 사용할 수 있습니다. 
+>사이트의 페이지 수가 많을 경우, ==sitemap.xml==과 ==sitemap-0.xml==이런 식으로 생성될 수 있는데, 등록은 ==sitemap.xml==만 하시면 됩니다.
+
+***
+
+## 4. robots.txt
+==robots.txt==는 검색로봇에게 사이트 및 웹페이지를 수집할 수 있도록 허용하거나 제한하는 파일입니다. ==public==폴더에 위치하여 허용하는 크롤러의 이름과 허용 범위를 설정할 수 있습니다.
+예를 들어 제 ==robots.txt==를 보면
+>/public/robots.txt
+```txt
+# *
+User-agent: *
+DisAllow: /
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Google
+User-agent: Yeti
+Allow: /
+
+# Host
+Host: 블로그URL
+
+# Sitemaps
+Sitemap: 블로그URL/sitemap.xml
+Sitemap: 블로그URL/rss.xml
+```
+이런 식으로 되어있습니다. ==Googlebot==은 ==Google==, ==Yeti==는 ==Naver==의 크롤러 이름입니다. 두 크롤러의 경우에만 블로그 모든 경로의 탐색을 허용하고, 나머지 크롤러는 막아두었습니다. ==Sitemap==의 내용도 선언해주셔야 크롤러를 유도합니다.
+>==robots.txt==는 상술한 ==sitemap.xml==생성 스크립트 중 `generateRobotsTxt: true,`에서 생성됩니다. 생성 후 내용을 수정하셨다면 `generateRobotsTxt: false,`로 바꿔주셔야 다음 빌드시에 내용이 초기화가 되지 않습니다. 혹은 생성 옵션을 사용하셔도 됩니다.
+
+***
+
+## 5. RSS
+&nbsp==RSS==는 웹사이트나 블로그의 새로운 콘텐츠를 자동으로 구독자에게 전달하기 위한 표준 형식입니다. 
+우리는 이==RSS==를 생성하여 ==sitemap==과 동일하게 검색 엔진 측에 제출 할 수 있습니다. ==SEO==에서 직접적인 랭킹 요소는 아니지만, 콘텐츠 감지에 도움을 주어 크롤링 효율을 높일 수 있습니다. 
+한번 만들어 보겠습니다. 생성 패키지가 있는걸로 알지만 이번에는 직접 생성해 보았습니다.
+>/scripts/generate-rss.ts
+```ts
+import fs from 'fs';
+import path from 'path';
+import { getAllPostMetas } from '../src/lib/postDataUtils';
+
+function escapeXml(unsafe: string) {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case "'": return '&apos;';
+      case '"': return '&quot;';
+      default: return c;
+    }
+  });
+}
+
+export function generateRssFeed() {
+    const posts = getAllPostMetas();
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL!;
+    const rssItemsXml = posts.map((post) => `
+        <item>
+            <title>${escapeXml(post.title)}</title>
+            <link>${baseUrl}/${post.category}/${post.slug}</link>
+            <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+            <description>${escapeXml(post.desc ?? '')}</description>
+        </item>
+    `).join('');
+    
+    const rssXml = `<?xml version="1.0" encoding="UTF-8" ?>
+    <rss version="2.0">
+        <channel>
+            <title>Hyeongyu's Blog</title>
+            <link>${baseUrl}</link>
+            <description>Front-end developer's blog</description>
+            <language>ko</language>
+            <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
+            <generator>Next.js RSS Generator</generator>
+            ${rssItemsXml}
+        </channel>
+    </rss>`;
+    fs.writeFileSync(path.join(process.cwd(), 'public', 'rss.xml'), rssXml);
+}
+
+generateRssFeed();
+```
+간단합니다. 모든 게시물의 ==metadata==를 불러와 ==RSS==서식에 알맞게 데이터를 넣어주면 됩니다. 그리고 ==sitemap==과 동일하게 해당 스크립트를 ==package.json==의 스크립트에 추가해줍니다.
+그리고 빌드를 하면 ==public==폴더에 ==rss.xml==파일이 생기고 이를 배포하고나서 ==블로그URL/rss.xml==로 접속해보면
+![rss생성 완료](/postImgs/blog/blog_making7/rss.png)
+이렇게 무사히 생성된 것을 확인 할 수 있습니다.
+
+이제 배포한 ==URL==과 ==sitemap==, ==RSS==를 검색 엔진에 등록해보겠습니다.
+
+***
+
+## 6. 검색 엔진 등록
+&nbsp;대부분의 대형 검색 엔진들은 사이트를 등록 할 수 있는 ==Webmaster Tools==혹은 ==SEO Tools==라고 불리는 것들이 있습니다. 대표적으로 ==Google==의 ==Search Console==, ==Naver==의 ==Search Advisor==가 있습니다. 저는 이 두 검색엔진에다만 블로그를 등록했습니다.
+두 과정 모두 UI만 약간 다를 뿐이지 대부분의 과정이 비슷하여 ==Google==의 ==Search Console==과정으로 설명을 대체하겠습니다.
+
+### -URL 등록
+&nbsp;[Google Search Console](https://search.google.com/search-console/about)로 이동해줍니다. 로그인을 하고 속성추가 버튼을 누르면
+![속성 유형 선택](/postImgs/blog/blog_making7/gsc.png)
+이런 창이 뜹니다. 자신이 개인 도메인을 보유하고 있다면 도메인, ==vercel==에서 제공하는 공유 도메인을 가지고 있다면 URL 접두어를 선택해줍니다.
+이렇게 등록을 하면, ==Search Console==에서 ==소유권 확인 파일==을 다운로드 받을 수 있습니다. 이를 프로젝트의 ==public==폴더에 집어넣고 다시 배포해주면 등록이 완료되고, 서치콘솔에 들어갈 수 있습니다.
+
+### -sitemap, rss 등록
+&nbsp;콘솔에 들어오면 좌측에 ==sitemap==메뉴를 들어갈 수 있습니다. 들어가면
+![sitemap 제출](/postImgs/blog/blog_making7/gsc2.png)
+요런 입력창이 있는데, 상술한 과정에서 생성한 ==sitemap.xml==과 ==rss.xml==을 제출해주면 등록이 완료됩니다.
+이후에는 크롤러가 페이지를 탐색할 시간을 주면됩니다.
+
+이렇게 모든 블로그 작업을 마치게 됩니다.
+
+***
+
+## 마치며
+&nbsp;이렇게 블로그 제작기를 마무리 하겠습니다. 설명드린 내용 이외에도 여러 구현 기능이 있고, 이후에 더 추가하고 싶은 기능이 많습니다. 차차 추가하며 계속 블로그를 운영해보겠습니다. 분량 상 설명을 생략한 부분도 많으니 궁금하시거나 한게 있다면 댓글 남겨주시거나 [코드 구경](https://github.com/stickfig8/my-nextjs-blog)도 좋을 것 같습니다.
+
+짧지않은 제작기 지켜봐주셔서 감사합니다. 다음 프로젝트로 뵙겠습니다.

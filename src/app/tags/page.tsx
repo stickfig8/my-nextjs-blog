@@ -25,9 +25,9 @@ export default function TagsPage() {
     const tags = getAllTags();
     const sortedTags = Object.entries(tags).sort((a, b) => a[0].localeCompare(b[0]));
     
-    const rows: [string, number][][] = [[], [], [], []];
+    const rows: [string, number][][] = [[], [], []];
     sortedTags.forEach((tag, idx) => {
-        rows[idx % 4].push(tag);
+        rows[idx % 3].push(tag);
     });
 
     return (
@@ -35,7 +35,7 @@ export default function TagsPage() {
             <PageTitle>Tags</PageTitle>
             <article className="flex mb-8">
                 {rows.map((row, idx) => (
-                    <div key={idx} className={`w-1/4 flex flex-col gap-4`}>
+                    <div key={idx} className={`w-1/3 flex flex-col gap-4`}>
                         {row.map((tag) => 
                             <Link key={tag[0]} href={`/tags/${tag[0]}`} className="text-lg text-[var(--mainText)] hover:underline hover:text-[var(--foreground)] underline-offset-4 active:scale-99 active:brightness-80">
                                 #{tag[0]} ({tag[1]})
