@@ -5,7 +5,7 @@
             <link>undefined</link>
             <description>Front-end developer's blog</description>
             <language>ko</language>
-            <lastBuildDate>Sun, 15 Jun 2025 20:02:34 GMT</lastBuildDate>
+            <lastBuildDate>Wed, 10 Sep 2025 18:40:45 GMT</lastBuildDate>
             <generator>Next.js RSS Generator</generator>
             
         <item>
@@ -48,6 +48,69 @@
             <link>undefined/undefined/blog_making6</link>
             <pubDate>Mon, 09 Jun 2025 00:00:00 GMT</pubDate>
             <description>개인 블로그 만들기 6탄 (SSG, 메타데이터, Open Graph)</description>
+        </item>
+    
+        <item>
+            <title>Next.js 15 &amp; Tailwind v4 블로그 제작기 (7)</title>
+            <link>undefined/undefined/blog_making7</link>
+            <pubDate>Thu, 12 Jun 2025 00:00:00 GMT</pubDate>
+            <description>개인 블로그 만들기 7탄 (배포, SEO)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (1)</title>
+            <link>undefined/undefined/catsgotogedog1</link>
+            <pubDate>Sun, 06 Jul 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 1탄 (개요 + 프로젝트 설명 + 기술 스택)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (2)</title>
+            <link>undefined/undefined/catsgotogedog2</link>
+            <pubDate>Sun, 13 Jul 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 2탄 (CI / CD + eslint / prettier)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (3)</title>
+            <link>undefined/undefined/catsgotogedog3</link>
+            <pubDate>Sun, 20 Jul 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 3탄 (JWT 기반 로그인 시스템)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (4)</title>
+            <link>undefined/undefined/catsgotogedog4</link>
+            <pubDate>Wed, 23 Jul 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 4탄 (https 개발 환경)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (5)</title>
+            <link>undefined/undefined/catsgotogedog5</link>
+            <pubDate>Sun, 27 Jul 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 5탄 (React Portals)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (6)</title>
+            <link>undefined/undefined/catsgotogedog6</link>
+            <pubDate>Sun, 03 Aug 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 6탄 (Union Type)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (7)</title>
+            <link>undefined/undefined/catsgotogedog7</link>
+            <pubDate>Sun, 10 Aug 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 7탄 (zustand를 이용한 사진 모달)</description>
+        </item>
+    
+        <item>
+            <title>어디가냥? 같이가개! 제작기 (8)</title>
+            <link>undefined/undefined/catsgotogedog8</link>
+            <pubDate>Sun, 17 Aug 2025 00:00:00 GMT</pubDate>
+            <description>React 팀 프로젝트 8탄 (Record를 이용한 유연한 데이터 대응)</description>
         </item>
     
         <item>

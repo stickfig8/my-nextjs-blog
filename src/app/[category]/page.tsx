@@ -4,7 +4,6 @@ import { CategoryProps } from "@/config/types";
 import PostList from "@/components/postLists/PostList";
 import PageTitle from "@/components/layouts/PageTitle";
 import { Metadata } from "next";
-import SortSelectButton from "@/components/common/SortSelectButton";
 import SubCategoryList from "@/components/postLists/SubCategoryList";
 
 export const dynamicParams = false;
