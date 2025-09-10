@@ -25,6 +25,8 @@ export const MyMdxComponent : MDXComponents = {
   ol: (props) => <ol className="list-decimal pl-6 my-4" {...props} />,
   li: (props) => <li className="my-1 text-base mb-3 leading-8 text-[var(--mainText)]" {...props} />,
   a: (props) => <a className="underline text-[var(--links)]" {...props} />,
-  img: (props) => (<PostImage {...props} />)
-
+  img: (props) => (<PostImage {...props} />),
+  th: (props) => <th className="w-fit h-4 px-4 py-1 border-[1px]" {...props}/>,
+  td: (props) => <td className="w-fit h-4 px-4 py-2 border-[1px]" {...props}/>,
+  table: (props) => <table className="mx-auto" {...props} />
 };

@@ -2,7 +2,7 @@
 title: Next.js 15 & Tailwind v4 블로그 제작기 (1)
 date: "2025-05-30"
 desc: 개인 블로그 만들기 1탄 (개요 + 블로그 설계)
-tags: ["blog_making", "next", "tailwind", "react", "typescript", "mdx"]
+tags: ["Next_Blog", "next", "tailwind", "react", "typescript", "mdx"]
 ---
  
 ## 1. 개요
@@ -45,7 +45,7 @@ tags: ["blog_making", "next", "tailwind", "react", "typescript", "mdx"]
 2. @next/mdx
 
 각자의 라이브러리는 특징과 차이점이 존재합니다. 특징들은 다음과 같습니다.
->==next-mdx-remote==
+>==@next/mdx==
 1. mdx 파일 자체를 Next.js 페이지처럼 컴파일해서 사용
 2. .mdx 파일을 컴포넌트처럼 import 해서 사용
 3. 유연성 낮음
@@ -53,17 +53,17 @@ tags: ["blog_making", "next", "tailwind", "react", "typescript", "mdx"]
 5. app디렉토리 + rsc에 최적화(next에서 권장하는 방식)
 6. frontmatter 파싱을 직접 못함(중요)
 
->==@next/mdx==
+>==next-mdx-remote==
 1. 런타임에 문자열을 파싱해서 렌더링
 2. 파일 위치를 문자열로 동적 처리 가능
 3. 유연성 높음
 4. 느릴 수 있음
 5. 최근에 rsc지원이 시작됨
-6. gray-matter 등으로 mdx파일을 읽어 컨텐츠를 문자열로 넘길 수 있고, frontmatter도 직접 파싱해서 처리 가능
+6. gray-matter 등으로 mdx파일을 읽어 컨텐츠를 문자열로 넘길 수 있고, frontmatter도 직접 파싱해서 처리 가능(중요)
 
 이러한 차이점에서 frontmatter를 따로 불러내어 정렬, 분류, 리스트화가 필요한 작업이 있다고 판단되어 mdx 파싱에는 ==next-mdx-remote==를 사용하게 되었습니다.
 
 *** 
 
 ## 마치며
-다음 게시물에는 ==next-mdx-remote==와 ==gray-matter==를 이용한 mdx 파싱과 이를 토대로 게시물 페이지와 게시물 리스트를 만드는 방법을 알아보도록 하겠습니다.
+&nbsp;다음 게시물에는 ==next-mdx-remote==와 ==gray-matter==를 이용한 mdx 파싱과 이를 토대로 게시물 페이지와 게시물 리스트를 만드는 방법을 알아보도록 하겠습니다.

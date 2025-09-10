@@ -1,0 +1,150 @@
+---
+title: 어디가냥? 같이가개! 제작기 (8)
+date: "2025-08-17"
+desc: React 팀 프로젝트 8탄 (Record를 이용한 유연한 데이터 대응)
+tags: ["CatsGoTogedog", "react", "typescript", "record", "type", "api"]
+---
+
+## 1. 문제 발생
+### - 다양한 데이터 타입 대응
+&nbsp;이번 프로젝트에는 직전 게시물에서 설명했듯이 각 장소의 상세정보를 나타내는 "상세 페이지"가 존재합니다. 이 상세페이지에서는 장소명, 주소부터 시작해서 이용안내, 반려동물 동반 정보와 같은 정보를 탭별로 표시합니다.
+
+각 장소 별 정보를 탭을 통해서 다른 정보를 출력하는 것은 어렵지 않으나, 문제는 팀원들과의 논의를 통해 각 장소의 카테고리마다 서로 다른 갯수와 종류의 정보가 출력되어야 한다는 점이 있었습니다.
+![축제](/postImgs/blog/catsgotogedog8/1.png)
+![음식점](/postImgs/blog/catsgotogedog8/2.png)
+![숙소](/postImgs/blog/catsgotogedog8/3.png)
+![관광지](/postImgs/blog/catsgotogedog8/4.png)
+
+상기의 사진을 보면 알 수 있듯이 카테고리 별로 요구되는 데이터와 라벨이 달랐고, 이는 모든 탭에 걸쳐서 요구되는 사항이였습니다.(반려동물 동반 정보는 동일합니다)
+
+백엔드에서는 각 장소에 대한 데이터는 ==공공데이터 API==를 통해 ==카테고리 id==전달해주기 때문에, 이를 통해 각 데이터의 카테고리를 파악하고, 카테고리 별로 다른 종류의 데이터를 출력하게끔 구현하는 것이 프론트엔드의 역할이 되었습니다.
+
+이를 해결하기 위해 다양한 ==type==선언과 ==Record==자료형을 이용하여 방법을 모색해봤습니다.
+
+*** 
+
+## 2. Record
+### - Record란?
+&nbsp;==typescript==에서 ==Record==자료형은 객체 타입을 간단하게 정의할 수 있게 해주는 유틸리티 타입입니다. `key`와 `value`로 이루어진 자료형이며, 객체 매핑 타입을 정의하는데 쓰입니다. 
+사용 예는 아래와 같습니다.
+
+```ts
+type User = Record<string, number>;
+
+const roles: User = {
+  admin: 1,
+  editor: 2,
+  viewer: 3,
+};
+
+// test[admin] === 1, test[editor] === 2 ...
+```
+
+### - 왜 Record?
+&nbsp;저는 두가지를 ==Record==를 통해 구현하였습니다.
+1. 각 탭의 제목
+2. 카테고리 별 출력할 탭 필드
+
+1의 경우에는 탭 필드의 이름(`key`)과 각 탭에 출력되어야 하는 제목(`value`)으로 이루어져 있고, 2의 경우에는 카테고리 별 코드(`key`)와 해당 카테고리에 필요한 정보(`value`)를 기입하는 형태로 이루어져 있습니다. 
+이를 통해 공동으로 출력되어야 하는 탭 제목은 자연스럽게 출력되고, 2의 Record를 이용하여 각 카테고리에 필요한 데이터를 개별적으로 출력할 수 있게 하였습니다. 상세한 코드는 다음 단락에서 설명됩니다.
+
+*** 
+
+## 3. 구현 과정
+### - 탭 작업
+&nbsp;먼저 각 탭에 필요한 이름을 먼저 자료형으로 선언해줍니다. `string`자료형으로 선언해도 되지만, 직관적이고 더 효과적인 ==type==준수를 위해 선언해주었습니다.
+
+> /types/forFrontTypes.ts
+```ts
+type TabKey = "basic" | "guide" | "detail" | "companion";
+```
+각 탭키는 ==Record==자료형에서 `key`로 이용됩니다.
+> /configs/TabTableOptions.ts
+```ts
+const labels: Record<TabKey, string> = {
+  basic: "기본 정보",
+  guide: "이용 안내",
+  detail: "상세 정보",
+  companion: "반려동물 동반 정보",
+};
+```
+이렇게 선언된 ==Record==는 
+
+> components/placeDetailPage/TabsInfo.tsx
+```ts
+{(["basic", "guide", "detail", "companion"] as TabKey[]).map(t) => (
+    <button key={t} onClick={() => setActive(t)}>
+        {labels[t]}
+    </button>
+)}
+```
+이렇게 각 탭을 선택하는 버튼으로 이용됩니다.
+
+### - 탭 내용 작업
+&nbsp;탭 내용에 앞서 선언한 두 자료형은 아래와 같습니다.
+> /types/forFrontTypes.ts
+```ts
+type FieldDef = {
+  label: string;
+  key?: string;
+  render?: (place: PlaceDetailData) => string;
+};
+
+type TabFields = Record<TabKey, TabFields[]>
+```
+`FieldDef`자료형은 ==Record==와 유사합니다. 처음에는 ==Record==자료형을 사용하려 했으나, 전달 받는 데이터 특성 상 여러 데이터 필드가 함께 출력되야 하는 경우가 있었습니다. (예: 주소 데이터가 addr1, addr2 처럼 따로 넘어오는 경우 or 기간을 출력할 때에 시작일과 종료일이 따로 넘어오는 경우 등)
+이러한 데이터에 대응하기 위해 `render`라는 속성을 추가하여 유연하게 대처하고자 했습니다.
+
+`TabFields`자료형은 이후에 사용할 탭별 데이터 선택에서 사용하기 위해 선언한 자료형입니다. 다음으로 넘어가보겠습니다.
+
+> /configs/TabTableOptions.ts
+```ts
+const tabsByContentType: Record<number, Partial<TabFields>> = {
+  // 관광지
+  12: {
+    basic: [
+      { label: "명칭", key: "title" },
+      {
+        label: "주소",
+        render: (place) => `${place.addr1} ${place.addr2 ?? ""}`,
+      },
+      { label: "전화번호", key: "tel" },
+    ],
+    guide: [
+      { label: "이용 시기", key: "additionalInformation.use_season" },
+      { label: "이용 시간", key: "additionalInformation.use_time" },
+      { label: "쉬는 날", key: "restDate" },
+      { label: "주차 시설", key: "additionalInformation.parking" },
+      { label: "체험가능 연령", key: "additionalInformation.exp_age_range" },
+      { label: "문의 및 안내", key: "additionalInformation.info_center" },
+    ],
+    detail: [{ label: "체험 안내", key: "additionalInformation.exp_guide" }],
+    companion: companionCommon,
+  },
+  ...
+```
+앞서 선언한 자료형들을 토대로 만든 콘텐츠 맵입니다. ==Record==자료형을 사용하였고, 키 값으로는 사전에 백엔드로부터 전달 받은 각 카테고리별 코드(`number`), 밸류 값으로는 앞서 선언한 `TabFields`자료형을 갖게 됩니다.
+(*이번 프로젝트에서는 발생하지 않았지만, 혹시 탭 정보가 누락될 염려 때문에 `Partial`을 추가해두었습니다.*)
+이후 각 카테고리 별로 원하는 라벨과, 해당 라벨에 필요한 백엔드 데이터 필드를 선택해주면 됩니다. 유동적으로 카테고리 별 데이터 선택이 가능하여 숙소 카테고리에서는 `detail`에 "체험 안내"만 있는 반면, 
+> /configs/TabTableOptions.ts
+```ts
+detail: [
+      { label: "행사 프로그램", key: "additionalInformation.program" },
+      { label: "부대 행사", key: "additionalInformation.subEvent" },
+    ],
+```
+축제 카테고리에서는 다른 데이터를 선언해주었습니다. 이러한 구조를 통해 카테고리 별 다른 데이터를 출력할 수 있게끔 구현하였습니다.
+
+이렇게 구조 형성을 한 뒤, 각 라벨을 정보의 제목으로 설정하고, 각 키를 통해 백엔드 데이터의 속성에 접근시키면
+
+![음식점](/postImgs/blog/catsgotogedog8/5.png)
+![축제](/postImgs/blog/catsgotogedog8/6.png)
+
+위와 같이 하나의 구조를 통해 서로 다른 데이터에 대한 접근이 가능해집니다.
+
+*** 
+## 4. 마치며
+&nbsp;이번 게시물에서는 ==Record==를 이용하여 서로 다른 데이터 구조에 대한 접근을 알아보았습니다. 
+이번 게시물을 마지막으로 팀 프로젝트 시리즈를 마무리 합니다. 새로운 경험과 배움으로 가득 찬 기간이였습니다.
+혹시 궁금한 점이나 피드백이 있으시면 댓글 남겨주시고, 코드가 궁금하신 분들은 [어디가냥? 같이가개! frontend 레포지토리](https://github.com/10teamm/frontend)로 방문해주세요.
+긴 시리즈 읽어주셔서 감사합니다.

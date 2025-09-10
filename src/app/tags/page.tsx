@@ -23,7 +23,11 @@ export function generateMetadata() {
 
 export default function TagsPage() {
     const tags = getAllTags();
-    const sortedTags = Object.entries(tags).sort((a, b) => a[0].localeCompare(b[0]));
+    const sortedTags = Object.entries(tags).sort((a, b) => {
+        const countDiff = b[1] - a[1]; // 1차: 수량 내림차순
+        if (countDiff !== 0) return countDiff;
+        return a[0].localeCompare(b[0]); // 2차: 이름 오름차순
+    });
     
     const rows: [string, number][][] = [[], [], []];
     sortedTags.forEach((tag, idx) => {

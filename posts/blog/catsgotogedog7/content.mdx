@@ -1,0 +1,174 @@
+---
+title: 어디가냥? 같이가개! 제작기 (7)
+date: "2025-08-10"
+desc: React 팀 프로젝트 7탄 (zustand를 이용한 사진 모달)
+tags: ["CatsGoTogedog", "zustand", "modal", "Props"]
+---
+
+## 1. 사진 모달
+### -사진 모달의 필요성과 재사용성
+&nbsp;현재 프로젝트에서는 장소의 상세정보를 열람 할 수 있는 "상세 페이지"가 존재합니다. 해당 페이지에서는 장소에 대한 정보, 주소(kakao map), 댓글 등을 열람 할 수 있습니다.
+또한 해당 페이지에서는 사진을 확대 해서 볼 수 있거나 혹은 여러 사진을 일괄적으로 열람 할 수 있는 ==사진 열람 모달==이 존재합니다.  
+![사진 모달 예시](/postImgs/blog/catsgotogedog7/1.png)
+
+모달의 재사용성을 최대한 높이기 위해 아래와 같이
+> /components/modals/PhotoSlideModal.tsx
+```ts
+...
+interface Props {
+  photoList: string[];
+  index: number;
+  modalClose: () => void;
+}
+const PhotoSlideModal = ({photoList, index, modalClose} : Props) => {
+  const [currentIdx, setCurrentIdx] = useState(index);
+
+  useModalEscapeKey(modalClose);
+
+  return (
+    <ModalBackground onClose={modalClose}>
+
+        ... 
+
+        {/* 사진 확대 div */}<
+        <section className="w-[640px] h-[480px] bg-[var(--sem-bg-elevated-alt)] rounded-[24px] overflow-hidden">
+          <img
+            src={photoList[currentIdx]?.imageUrl ?? ""}
+            alt="photo_big"
+            className="w-full h-full object-contain"
+          />
+        </section>
+        <p className="text-[16px]">{`${currentIdx + 1}/${photoList.length}`}</p>
+
+        <PhotoSlideSection
+          photoList={photoList}
+          setIndex={setCurrentIdx}
+          activeIndex={currentIdx}
+        />
+      </div>
+    </ModalBackground>
+  );
+};
+
+export default PhotoSlideModal;
+```
+와 같은 형식으로 구현했습니다. 사진을 클릭하면 해당 사진을 포함하는 사진 모음 배열과 해당 사진의 인덱스, 그리고 모달을 닫을 수 있는 함수를 ==Props==로 받게 됩니다. 
+이러한 방식은 두가지 단점이 존재합니다.
+
+1. 클릭 가능한 모든 사진 (혹은 배열) 마다 모달을 배치 시켜야한다.
+2. 상위 컴포넌트에 모달을 배치 시켰을 경우 하위의 최종 클릭 컴포넌트까지 계속 ==Props==로 배열, 함수 등을 넘겨야 한다.
+
+이 단점들은 불필요한 코드가 너무 많아져 코드의 퀄리티와 유지보수성을 저하시키고, ==Props Drilling== 문제를 야기시켜, 불필요하게 많은 컴포넌트가 사용하지 않는 ==Props==를 받아서 자식 컴포넌트로 전달시켜줘야 하는 문제가 있습니다.
+
+해당 문제들을 해결하기 위해, ==zustand==를 사용하였습니다.
+
+***
+
+## 2. zustand를 이용한 모달 관리
+### -모달의 상태 전역화
+&nbsp;아래는 사진 모달을 위해 구현한 ==zustand store==입니다.
+
+> /stores/photoModalStore.ts
+```ts
+import { create } from "zustand";
+import type { ResponseImage } from "@/types/apiResponseTypes";
+
+interface PhotoModalState {
+  isOpen: boolean;
+  photoList: ResponseImage[]; // 해당 자료형은 동 프로젝트 6탄 게시물에 있습니다.
+  index: number;
+  modalOpen: (photoList: ResponseImage[], index: number) => void;
+  modalClose: () => void;
+}
+
+export const usePhotoModalStore = create<PhotoModalState>((set) => ({
+  isOpen: false,
+  photoList: [],
+  index: 0,
+  modalOpen: (photoList: ResponseImage[], index: number) =>
+    set({ isOpen: true, photoList, index }),
+  modalClose: () => set({ isOpen: false, photoList: [], index: 0 }),
+}));
+```
+개요는 간단합니다. 앞서 설명한 모달에서 필요한 ==Props==를 ==zustand store==로 이관시켜 관리하는 것입니다. 다만 차이가 있다면, `modalOpen` 함수 실행 시에 이미지 배열, 인덱스를 `set`하고, `modalClose` 함수 실행 시에 설정된 ==store==값을 초기화 하는 것입니다.
+이를 통해 사진 모달은 전역으로 관리되며, ==open==, ==close==시에 필요한 데이터가 `set`되거나 초기화됩니다. 이를 통해 구현한 모달은
+
+> /components/modals/PhotoSlideModal.tsx
+```ts
+const PhotoSlideModal = () => {
+  const { photoList, index, modalClose } = usePhotoModalStore();
+  const [currentIdx, setCurrentIdx] = useState(index);
+
+  useModalEscapeKey(modalClose);
+
+  return (
+    <ModalBackground onClose={modalClose}>
+        
+        ...
+
+        {/* 사진 확대 div */}
+        <section className="w-[640px] h-[480px] bg-[var(--sem-bg-elevated-alt)] rounded-[24px] overflow-hidden">
+          <img
+            src={photoList[currentIdx]?.imageUrl ?? ""}
+            alt="photo_big"
+            className="w-full h-full object-contain"
+          />
+        </section>
+        <p className="text-[16px]">{`${currentIdx + 1}/${photoList.length}`}</p>
+
+        <PhotoSlideSection
+          photoList={photoList}
+          setIndex={setCurrentIdx}
+          activeIndex={currentIdx}
+        />
+      </div>
+    </ModalBackground>
+  );
+};
+
+export default PhotoSlideModal;
+```
+와 같은 형태로 변경되며, 
+
+모달 컴포넌트 자체는 가장 상위 컴포넌트인 ==Page==에서 한번 만 사용해주면 됩니다.
+
+> /pages/PlaceDetailPage.tsx
+```ts
+const PlaceDetailPage = () => {
+  ...
+  const { isOpen } = usePhotoModalStore();
+  return (
+    <MainContainer>
+        ...
+          <MapSection
+            title={placeDetail?.title ?? ""}
+            lat={placeDetail?.mapy ?? 37.5125}
+            lng={placeDetail?.mapx ?? 127.10278}
+          />
+          <PlaceInfoSection placeData={placeDetail!} />
+          <ReviewSection placeId={id!} />
+          {isOpen && <PhotoSlideModal />}
+        </article>
+      )}
+    </MainContainer>
+  );
+};
+```
+
+이렇게 사용해두면 사진 모달의 상태는 전역으로 관리 되기 때문에 모든 클릭가능한 사진 요소에서 해당 모달을 렌더링 할 필요없이 데이터와 ==open==여부를 세팅하는 형태로 사용 할 수 있습니다.
+> /components/PlaceDetailPage/review/ReviewPhotoCard.tsx
+```ts
+const ReviewPhotoCard = ({ img, index, photoList }: Props) => {
+  const { modalOpen } = usePhotoModalStore();
+  return (
+    <MainCard
+      className="w-[150px] h-[150px] bg-cover cursor-pointer"
+      onClick={() => modalOpen(photoList, index)}
+    >
+    ...
+```
+
+*** 
+
+## 3. 마치며
+&nbsp;이번 게시물에서는 ==zustand==를 이용한 상태 전역화를 통해 코드의 유지보수성과 효율성을 높이는 작업에 대해 알아보았습니다. 혹시 궁금한 점이나 피드백이 있으시면 댓글 남겨주세요

@@ -1,9 +1,11 @@
-import { getAllCategories, getPostMetasByCategory } from "@/lib/postDataUtils";
+import { getAllCategories, getFirstTagsByCategory, getPostMetasByCategory } from "@/lib/postDataUtils";
 import Container from "@/components/layouts/Container";
 import { CategoryProps } from "@/config/types";
 import PostList from "@/components/postLists/PostList";
 import PageTitle from "@/components/layouts/PageTitle";
 import { Metadata } from "next";
+import SortSelectButton from "@/components/common/SortSelectButton";
+import SubCategoryList from "@/components/postLists/SubCategoryList";
 
 export const dynamicParams = false;
 
@@ -35,13 +37,15 @@ export async function generateMetadata({params}: {params: CategoryProps}): Promi
 
 
 export default async function PostPage({params}: {params: CategoryProps}) {
+    
     const { category } = await params;
-
+    const subCategory = getFirstTagsByCategory(category);
     const sortedPosts = await getPostMetasByCategory(category);
 
     return (
         <Container>
             <PageTitle>{category.charAt(0).toUpperCase()+category.slice(1)} Posts</PageTitle>
+            <SubCategoryList subCategory={subCategory} />
             <PostList posts={sortedPosts} />
         </Container>
     )

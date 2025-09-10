@@ -1,0 +1,218 @@
+---
+title: 어디가냥? 같이가개! 제작기 (2)
+date: "2025-07-13"
+desc: React 팀 프로젝트 2탄 (CI / CD + eslint / prettier)
+tags: ["CatsGoTogedog", "github", "CI", "CD", "eslint", "prettier"]
+---
+
+## 1. 프론트엔드 협업의 시작
+### -협업 환경 구축
+&nbsp;기술 스택을 정하고 난 뒤 좀 더 원활한 개발 협업을 위해 협업 환경을 구축하고자 노력했습니다. 
+
+결정 & 구축한 규칙과 환경들의 내용에는
+- 코드 컨벤션 
+- 브랜치 전략과 커밋 컨벤션 설정
+- ==Github Actions==를 이용한 ==CI==
+- ==render==를 이용한 ==CD== 및 팀원들을 위한 ==preview url== 생성
+- ==eslint== + ==prettier== 도입
+
+정도가 있습니다. 각각의 요소들을 살펴보겠습니다.
+
+*** 
+
+## 2. 코드 컨벤션
+&nbsp;==코드 컨벤션==은 서로 다른 개발자의 코드 스타일을 일치 시켜 다른 개발자의 코드를 보더라도 가독성에 영향이 없게끔 설정 하기 위해 설정하였습니다. 다만 서로 간의 합의를 통해 엄격한 코드 컨벤션을 정하지는 않았고, 다음과 같은 규칙 정도만 설정하여 준수하였습니다.
+- 함수형 컴포넌트 사용
+- 함수 선언 시 `function`키워드가 아닌 `const test = () => {}`와 같은 화살표 함수 사용
+- `export`문은 코드 맨 하단에 위치
+- 각 컴포넌트에 필요한 함수는 다른 파일 or 훅에 위치 시키고 컴포넌트는 최대한 순수한 형태를 유지
+- 중첩 컴포넌트를 피하고 최대한 재사용 가능한 모듈화 구현
+
+*** 
+
+## 3. Github 브랜치 전략과 커밋 컨벤션
+### -브랜치 전략
+&nbsp;개인 프로젝트에서는 ==pull request==없이 항상 ==main==브랜치에 직접 ==push==를 진행했으나, 협업 프로젝트인 만큼 브랜치 전략을 도입했습니다.
+![브랜치 예시](/postImgs/blog/catsgotogedog2/1.png)
+
+각 브랜치들은
+- main: 최종 배포용 브랜치. 수정은 ==develop==브랜치로부터의 ==pr==로만 가능
+- develop: 개발 결과 브랜치. 하위 ==feature/XXX==브랜치로부터의 ==pr==로 기능 업데이트. ==main== 전 최종 브랜치
+- feature: 각 개발자의 작업 브랜치. 각 브랜치별로 기능을 할당하여 개발. 기능 개발이 완료되면 ==develop==으로 ==pr==을 올림
+
+와 같은 역할들을 수행합니다.
+
+> ==pr==을 올리게 되면 상대 개발자가 코드 리뷰를 하고 수정 or 요청 사항 체크 후 ==merge==하는 형식으로 진행하였습니다.
+
+### -커밋 컨벤션
+&nbsp;좀 더 원활한 커밋 추적을 위해 커밋 컨벤션 또한 결정하였습니다. 많은 분들이 사용하시는 방법처럼
+- feat: 기능 구현
+- fix: 버그, 오탈자 등 수정
+- style: 스타일 수정
+- doc: 문서(readme), assets(이미지 등) 추가 및 수정
+- chore: 자잘한 작업(폴더 이동, 이름 수정 등)
+
+와 같은 형태로 결정하였습니다.
+
+*** 
+
+## 4. CI
+&nbsp;==pr==을 생성하게 되면 자동으로 ==build==와  ==lint==를 검사해주고, 이를 ==discord==알림으로 전송하는 ==CI==파이프라인을 ==GitHub Actions==를 통해 구축하였습니다. 알림은 ==discord==에서 제공하는 ==webhook==을 받아 연결하는 형태로 구현했습니다.
+> /.github/workflows/ci.yml
+```yml
+name: Frontend CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.jobs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Discord Notification
+        if: always()
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          embed-title: >
+            ${{ job.status == 'success' && (
+              github.event_name == 'pull_request' && '✅ PR CI 성공' ||
+              github.event_name == 'push' && '✅ Push CI 성공'
+            ) || (
+              github.event_name == 'pull_request' && '❌ PR CI 실패' ||
+              github.event_name == 'push' && '❌ Push CI 실패'
+            ) }}
+          embed-description: |
+            브랜치: ${{ github.head_ref || github.ref_name }}
+            제목: ${{ github.event.pull_request.title || github.event.head_commit.message || github.sha }}
+            커밋 SHA: ${{ github.sha }}
+            Commit 링크: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
+
+          embed-color: ${{ job.status == 'success' && '65280' || '16711680' }}
+```
+이런 형태로 구축하면 ==main==, ==develop==브랜치를 베이스로 한 ==pr==이 생성되거나 ==push==가 발생하면 ==CI==결과가 ==discord==알림으로 전송됩니다.  
+![성공 예시](/postImgs/blog/catsgotogedog2/2.png)
+![실패 예시](/postImgs/blog/catsgotogedog2/3.png)
+
+이와 같이 원하는 이벤트에 따라 원하는 내용 및 색상을 넣어서 ==CI==테스트 실행 및 결과 알림을 전송할 수 있습니다.
+
+> 추가로 ==pr==생성 알림 이벤트도 따로 설정해주었습니다.
+
+*** 
+
+## 5. CD
+&nbsp;이 쪽은 ==render==를 이용했습니다. 두개의 브랜치를 각각의 프로젝트에 연결하여, ==develop==브랜치는 팀원 공유용 url, ==main==브랜치는 최종 배포용 url에 연결해두어 각 브랜치에 push가 발생할 때 마다 자동으로 빌드와 배포가 완료되게 하였습니다.
+
+*** 
+
+## 6. ESLint Prettier
+&nbsp;==ESLint==와 ==Prettier==를 도입하여 코드 레이아웃을 통일하고자 했습니다. 이를 통해 일관적인 코드 스타일을 구현하여 서로 다른 개발자가 작성한 코드의 스타일이 달라 발생하는 불필요한 리뷰와 토론을 감소하게끔 하였습니다.
+
+==Prettier==를 통해 들여쓰기, 따옴표, 세미콜론과 같은 스타일을 자동으로 맞추고, ==ESLint==를 통해 타입스크립트 문법 검사와 리액트 훅 의존성 누락 같은 잠재적 버그를 사전에 인지할 수 있게끔 하였습니다.
+
+또한 ==VSCode==환경에서 저장 시 자동으로 `eslint --fix`가 실행되도록 설정하여, 모든 팀원이 별도 노력없이 일관된 코드 품질을 유ㅈ할 수 있게 하였습니다.
+
+>/eslint.config.js
+```js
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
+import pluginReactHooks from "eslint-plugin-react-hooks";
+import pluginPrettier from "eslint-plugin-prettier";
+
+import { defineConfig, globalIgnores } from "eslint/config";
+
+export default defineConfig([
+  globalIgnores(["dist", "build", "coverage"]),
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: { jsx: true },
+      },
+      globals: globals.browser,
+    },
+    plugins: {
+      react: pluginReact,
+      "react-hooks": pluginReactHooks,
+      "@typescript-eslint": tseslint.plugin,
+      prettier: pluginPrettier,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+      ...pluginReact.configs.flat.recommended.rules,
+      ...pluginReactHooks.configs.recommended.rules,
+
+      "prettier/prettier": "warn",
+
+      "react/react-in-jsx-scope": "off",
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+  },
+]);
+```
+
+> 각 언어에 필요한 규칙은 간편하게 ==recommended==를 사용하였습니다.
+> ==Prettier==문법에 어긋나는 부분을 오류가 아닌 경고로 처리하여 불필요한 에러를 방지하여 개발자가 해당 문법을 인지할 수 있게끔만 설정하였습니다.
+
+>/.vscode/settings.json
+```json
+{
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+> 저장 시 자동 수정과 수정에 필요한 기본 포맷터를 설정해주었습니다.
+
+*** 
+
+## 7. 마치며
+&nbsp;이외에 프로젝트 디렉토리 구조 등을 추가로 설정했으나 해당 게시물에서는 생략합니다. 추가적인 코드 내용이 궁금하시다면 [어디가냥? 같이가개! frontend 레포지토리](https://github.com/10teamm/frontend)로 방문해주세요.
+
+다음 게시물 부터는 새로운 기능 구현 혹은 트러블 슈팅 위주의 게시물을 올리겠습니다.

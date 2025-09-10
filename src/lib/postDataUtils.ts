@@ -81,6 +81,16 @@ export function getAllTags():Record<string, number> { //Record객체 반환
     return tagMap;
 }
 
+export function getFirstTagsByCategory(category: string): string[] {
+  const posts = getPostMetasByCategory(category);
+  const firstTags = posts
+    .map(post => post.tags?.[0]) // 첫 번째 태그만 추출
+    .filter((tag): tag is string => !!tag); // undefined 제거
+
+  // 중복 제거
+  return [...new Set(firstTags)];
+}
+
 export function getLatestPostMetas(count: number): PostMetaWithCategory[] {
     const slugs = getAllSlugs();
     const allPosts = slugs
