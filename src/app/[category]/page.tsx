@@ -1,10 +1,10 @@
 import { getAllCategories, getFirstTagsByCategory, getPostMetasByCategory } from "@/lib/postDataUtils";
 import Container from "@/components/layouts/Container";
 import { CategoryProps } from "@/config/types";
-import PostList from "@/components/postLists/PostList";
 import PageTitle from "@/components/layouts/PageTitle";
 import { Metadata } from "next";
 import SubCategoryList from "@/components/postLists/SubCategoryList";
+import PagedPostList from "@/components/postLists/PagedPostList";
 
 export const dynamicParams = false;
 
@@ -45,7 +45,7 @@ export default async function PostPage({params}: {params: CategoryProps}) {
         <Container>
             <PageTitle>{category.charAt(0).toUpperCase()+category.slice(1)} Posts</PageTitle>
             <SubCategoryList subCategory={subCategory} />
-            <PostList posts={sortedPosts} />
+            <PagedPostList posts={sortedPosts} />
         </Container>
     )
 }

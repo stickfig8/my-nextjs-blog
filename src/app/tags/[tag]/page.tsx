@@ -1,7 +1,7 @@
 import { TagProps } from "@/config/types";
 import { getAllTags, getPostMetasByTag } from "@/lib/postDataUtils";
 import Container from "@/components/layouts/Container";
-import PostList from "@/components/postLists/PostList";
+import PagedPostList from "@/components/postLists/PagedPostList";
 
 export const dynamicParams = false;
 
@@ -36,7 +36,7 @@ export default async function TagPage({params}: {params: TagProps}) {
     return(
         <Container>
             <h1 className="text-3xl font-bold mb-6">#{tag}</h1>
-            <PostList posts={sortedPosts} />
+            <PagedPostList posts={sortedPosts} />
         </Container>
     )
 }
