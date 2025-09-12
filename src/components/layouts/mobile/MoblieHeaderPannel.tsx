@@ -25,6 +25,7 @@ export default function MobileHeaderPannel({isOpen, onClose} : Props) {
                     <MobileHeaderLink href="/blog" inner="Blog" onClick={onClose} />
                     <MobileHeaderLink href="/thoughts" inner="Thoughts" onClick={onClose}/>
                     <MobileHeaderLink href="/tags" inner="Tags" onClick={onClose}/>
+                    <MobileHeaderLink href="/projects" inner="Projects" onClick={onClose} />
                 </div>
             </aside>
         </div>

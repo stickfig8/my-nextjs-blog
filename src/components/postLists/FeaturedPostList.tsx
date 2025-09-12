@@ -12,6 +12,7 @@ export default function FeaturedPostList({posts}: Props) {
     
     const [index, setIndex] = useState(0);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const max = posts.length;
 
     useEffect(() => {
@@ -22,10 +23,12 @@ export default function FeaturedPostList({posts}: Props) {
             if(timeoutRef.current) clearTimeout(timeoutRef.current);
         };
     }, [index, max]);
-    
+
     const handlePrev = () => setIndex((prev) => (prev - 1 + max) % max);
     const handleNext = () => setIndex((prev) => (prev + 1 + max) % max);
     const handleDotClick = (i:number) => setIndex(i);
+
+   
 
     return(
         <section className="mb-8">
@@ -45,7 +48,7 @@ export default function FeaturedPostList({posts}: Props) {
                 </div>
             </div>
             
-            <div className="w-full overflow-hidden">
+            <div className="w-full overflow-hidden touch-pan-x">
             {/* post panel */}
                 <div className="flex transition-transform duration-700 ease-in-out"
                     style={{ transform: `translateX(-${index * 100}%)`, width: `${100 * max}%` }}

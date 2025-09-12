@@ -38,5 +38,15 @@ export type Heading = { //HTMLHeadingElement와 유사한 객체
     level: number;
 }
 
-
 export type ThemeOption = 'light' | 'dark' | 'system'; 
+
+export type ProjectDetail = {
+  title: string;
+  thumbnail: string;
+  projectType: string;
+  simpleDescription: string;
+  tech: string[];
+  domain: string;
+  github: string;
+  period: string;
+}

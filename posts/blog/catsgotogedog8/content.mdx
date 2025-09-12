@@ -2,11 +2,11 @@
 title: 어디가냥? 같이가개! 제작기 (8)
 date: "2025-08-17"
 desc: React 팀 프로젝트 8탄 (Record를 이용한 유연한 데이터 대응)
-tags: ["CatsGoTogedog", "react", "typescript", "record", "type", "api"]
+tags: ["CatsGoTogedog", "React", "Typescript", "Record", "type", "api"]
 ---
 
 ## 1. 문제 발생
-### - 다양한 데이터 타입 대응
+### -다양한 데이터 타입 대응
 &nbsp;이번 프로젝트에는 직전 게시물에서 설명했듯이 각 장소의 상세정보를 나타내는 "상세 페이지"가 존재합니다. 이 상세페이지에서는 장소명, 주소부터 시작해서 이용안내, 반려동물 동반 정보와 같은 정보를 탭별로 표시합니다.
 
 각 장소 별 정보를 탭을 통해서 다른 정보를 출력하는 것은 어렵지 않으나, 문제는 팀원들과의 논의를 통해 각 장소의 카테고리마다 서로 다른 갯수와 종류의 정보가 출력되어야 한다는 점이 있었습니다.
@@ -24,7 +24,7 @@ tags: ["CatsGoTogedog", "react", "typescript", "record", "type", "api"]
 *** 
 
 ## 2. Record
-### - Record란?
+### -Record란?
 &nbsp;==typescript==에서 ==Record==자료형은 객체 타입을 간단하게 정의할 수 있게 해주는 유틸리티 타입입니다. `key`와 `value`로 이루어진 자료형이며, 객체 매핑 타입을 정의하는데 쓰입니다. 
 사용 예는 아래와 같습니다.
 
@@ -40,7 +40,7 @@ const roles: User = {
 // test[admin] === 1, test[editor] === 2 ...
 ```
 
-### - 왜 Record?
+### -왜 Record?
 &nbsp;저는 두가지를 ==Record==를 통해 구현하였습니다.
 1. 각 탭의 제목
 2. 카테고리 별 출력할 탭 필드
@@ -51,7 +51,7 @@ const roles: User = {
 *** 
 
 ## 3. 구현 과정
-### - 탭 작업
+### -탭 작업
 &nbsp;먼저 각 탭에 필요한 이름을 먼저 자료형으로 선언해줍니다. `string`자료형으로 선언해도 되지만, 직관적이고 더 효과적인 ==type==준수를 위해 선언해주었습니다.
 
 > /types/forFrontTypes.ts
@@ -80,7 +80,7 @@ const labels: Record<TabKey, string> = {
 ```
 이렇게 각 탭을 선택하는 버튼으로 이용됩니다.
 
-### - 탭 내용 작업
+### -탭 내용 작업
 &nbsp;탭 내용에 앞서 선언한 두 자료형은 아래와 같습니다.
 > /types/forFrontTypes.ts
 ```ts

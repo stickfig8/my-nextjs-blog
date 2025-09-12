@@ -5,7 +5,7 @@
             <link>undefined</link>
             <description>Front-end developer's blog</description>
             <language>ko</language>
-            <lastBuildDate>Thu, 11 Sep 2025 09:50:51 GMT</lastBuildDate>
+            <lastBuildDate>Fri, 12 Sep 2025 08:25:50 GMT</lastBuildDate>
             <generator>Next.js RSS Generator</generator>
             
         <item>
@@ -68,7 +68,7 @@
             <title>어디가냥? 같이가개! 제작기 (2)</title>
             <link>undefined/undefined/catsgotogedog2</link>
             <pubDate>Sun, 13 Jul 2025 00:00:00 GMT</pubDate>
-            <description>React 팀 프로젝트 2탄 (CI / CD + eslint / prettier)</description>
+            <description>React 팀 프로젝트 2탄 (CI / CD + ESLint / Prettier)</description>
         </item>
     
         <item>

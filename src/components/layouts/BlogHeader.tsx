@@ -19,6 +19,7 @@ export default function BlogHeader() {
                 <HeaderLink href="/blog" isActive={pathName.startsWith('/blog')} inner="Blog" />
                 <HeaderLink href="/thoughts" isActive={pathName.startsWith('/thoughts')} inner="Thoughts" />
                 <HeaderLink href="/tags" isActive={pathName.startsWith('/tags')} inner="Tags" />
+                <HeaderLink href="/projects" isActive={pathName.startsWith('/projects')} inner="Projects" />
             </nav>
             
             {/* 모바일 화면 */}
