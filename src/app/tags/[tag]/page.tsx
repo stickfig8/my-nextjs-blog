@@ -16,13 +16,13 @@ export async function generateMetadata({params}: {params: TagProps}) {
         title: `#${tag}`,
         openGraph: {
             title: `#${tag} | Hyeongyu's blog`,
-            description: `#${tag} post list`,
+            description: `#${tag} tag list`,
             images: ['/assets/blog_thumbnail.jpg'],
             type: "article"
         },
         twitter: {
             card: 'summary_large_image',
-            title: `#${tag} Posts | Hyeongyu's blog`,
+            title: `#${tag} Tags | Hyeongyu's blog`,
             description: `#${tag} post list`,
             images: ['/assets/blog_thumbnail.jpg'],
         }

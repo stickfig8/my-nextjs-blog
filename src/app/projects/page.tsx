@@ -5,7 +5,7 @@ import { projectContents } from "@/config/projectContents";
 
 export function generateMetadata() {
     return {
-        title: `Projects | Hyeongyu's blog`,
+        title: `Projects`,
         openGraph: {
             title: `Projcets | Hyeongyu's blog`,
             description: `project list`,

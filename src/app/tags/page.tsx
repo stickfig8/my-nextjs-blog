@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export function generateMetadata() {
     return {
-        title: `Tags | Hyeongyu's blog`,
+        title: `Tags`,
         openGraph: {
             title: `Tags | Hyeongyu's blog`,
             description: `tag list`,
