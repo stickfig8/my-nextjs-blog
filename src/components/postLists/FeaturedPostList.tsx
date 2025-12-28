@@ -1,6 +1,5 @@
-'use client';
+"use client"
 
-import { useState, useRef, useEffect } from "react";
 import PostCard from "./PostCard";
 import { PostMetaWithCategory } from "@/config/types";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";

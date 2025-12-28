@@ -1,8 +1,9 @@
 import { CarouselApi } from "@/components/ui/carousel";
+import { PostMetaWithCategory } from "@/config/types";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 
-export function useCarouselController(arr: any[]) {
+export function useCarouselController(posts: PostMetaWithCategory[]) {
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
     const [count, setCount] = useState(0);
@@ -18,7 +19,7 @@ export function useCarouselController(arr: any[]) {
       setCurrent(api.selectedScrollSnap());
       plugin.current?.reset();
     });
-  }, [api, arr]);
+  }, [api, posts]);
 
   const movePrev = () => {
     const prevIndex = (current - 1 + count) % count;
