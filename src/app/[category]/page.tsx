@@ -4,7 +4,10 @@ import { CategoryProps } from "@/config/types";
 import PageTitle from "@/components/layouts/PageTitle";
 import { Metadata } from "next";
 import SubCategoryList from "@/components/postLists/SubCategoryList";
-import PagedPostList from "@/components/postLists/PagedPostList";
+import PostList from "@/components/postLists/PostList";
+import Pagenation from "@/components/postLists/Pagenation";
+import { PAGE_SIZE } from "@/config/commonConfigs";
+import { normalizePageSearchParam, paginate } from "@/lib/pageUtils";
 
 export const dynamicParams = false;
 
@@ -35,17 +38,27 @@ export async function generateMetadata({params}: {params: CategoryProps}): Promi
 }
 
 
-export default async function PostPage({params}: {params: CategoryProps}) {
+export default async function PostPage({params, searchParams}: { params: CategoryProps;
+    searchParams?: Promise<{page?: number}>;}) {
     
     const { category } = await params;
-    const subCategory = getFirstTagsByCategory(category);
+    const resolved = (await searchParams) || {};
+
     const sortedPosts = await getPostMetasByCategory(category);
+    const totalPages = Math.ceil(sortedPosts.length / PAGE_SIZE);
+
+    const page = normalizePageSearchParam(resolved, totalPages);
+
+    const pagedPosts = paginate(sortedPosts, page, 6);
+
+    const subCategory = getFirstTagsByCategory(category);
 
     return (
         <Container>
             <PageTitle>{category.charAt(0).toUpperCase()+category.slice(1)} Posts</PageTitle>
             <SubCategoryList subCategory={subCategory} />
-            <PagedPostList posts={sortedPosts} />
+            <PostList posts={pagedPosts} />
+            <Pagenation currentPage={page} totalPages={totalPages} />
         </Container>
     )
 }

@@ -1,7 +1,10 @@
 import { TagProps } from "@/config/types";
 import { getAllTags, getPostMetasByTag } from "@/lib/postDataUtils";
 import Container from "@/components/layouts/Container";
-import PagedPostList from "@/components/postLists/PagedPostList";
+import PostList from "@/components/postLists/PostList";
+import { PAGE_SIZE } from "@/config/commonConfigs";
+import { normalizePageSearchParam, paginate } from "@/lib/pageUtils";
+import Pagenation from "@/components/postLists/Pagenation";
 
 export const dynamicParams = false;
 
@@ -29,14 +32,22 @@ export async function generateMetadata({params}: {params: TagProps}) {
     }
 }
 
-export default async function TagPage({params}: {params: TagProps}) {
+export default async function TagPage({params, searchParams}: {params: TagProps, searchParams?: Promise<{page?: number}>;}) {
     const {tag} = await params;
+    const resolved = (await searchParams) || {};
+
     const sortedPosts = getPostMetasByTag(tag);
+    const totalPages = Math.ceil(sortedPosts.length / PAGE_SIZE);
+    
+    const page = normalizePageSearchParam(resolved, totalPages);
+    
+    const pagedPosts = paginate(sortedPosts, page, 6);
 
     return(
         <Container>
             <h1 className="text-3xl font-bold mb-6">#{tag}</h1>
-            <PagedPostList posts={sortedPosts} />
+            <PostList posts={pagedPosts} />
+            <Pagenation currentPage={page} totalPages={totalPages} />
         </Container>
     )
 }

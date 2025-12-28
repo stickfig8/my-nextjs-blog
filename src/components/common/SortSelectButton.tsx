@@ -8,7 +8,7 @@ type Props = {
 export default function SortSelectButton({text, to} : Props) {
     return (
         <Link className={`w-fit h-7 flex items-center justify-center text-lg cursor-pointer hover:underline`}
-            href={"/tags/"+to}>
+            href={"/tags/"+to+"?page=1"}>
             #{text}
         </Link>
     )

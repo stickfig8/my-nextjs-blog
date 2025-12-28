@@ -16,8 +16,8 @@ export default function BlogHeader() {
             {/* pc화면 */}
             <nav className="sm:flex hidden gap-2">
                 <HeaderLink href="/" isActive={pathName === '/'} inner="Home" />
-                <HeaderLink href="/blog" isActive={pathName.startsWith('/blog')} inner="Blog" />
-                <HeaderLink href="/thoughts" isActive={pathName.startsWith('/thoughts')} inner="Thoughts" />
+                <HeaderLink href="/blog?page=1" isActive={pathName.startsWith('/blog')} inner="Blog" />
+                <HeaderLink href="/thoughts?page=1" isActive={pathName.startsWith('/thoughts')} inner="Thoughts" />
                 <HeaderLink href="/tags" isActive={pathName.startsWith('/tags')} inner="Tags" />
                 <HeaderLink href="/projects" isActive={pathName.startsWith('/projects')} inner="Projects" />
             </nav>

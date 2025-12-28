@@ -9,7 +9,17 @@ export const projectContents:ProjectDetail[] = [
         tech: ["React" , "Typescript", "Tailwindcss", "shadcn", "Zustand", "Vite", "ESLint", "Prettier", "Render"],
         domain: "https://frontend-dev-bukp.onrender.com/",
         github: "https://github.com/10teamm/frontend",
-        period: "25.07 ~ 25.08"
+        period: "25.07 ~ 25.09"
+    },
+    {
+        title: "Simply Practice",
+        thumbnail: "/projects/prac_thumbnail.png",
+        projectType: "개인 프로젝트",
+        simpleDescription: "React기반 악기 연습 플랫폼입니다.",
+        tech: ["React" , "Typescript", "Tailwindcss", "shadcn", "Zustand", "WebAudioApi", "Wavesurfer", "Render"],
+        domain: "https://github.com/stickfig8/simply-practice",
+        github: "https://github.com/stickfig8/simply-practice",
+        period: "25.11 ~ 25.12"
     },
     {
         title: "Next 블로그",
@@ -22,15 +32,6 @@ export const projectContents:ProjectDetail[] = [
         period: "25.06"
     },
     
-    {
-        title: "simply practice",
-        thumbnail: "/projects/prac_thumbnail.png",
-        projectType: "개인 프로젝트",
-        simpleDescription: "React기반 악기 연습 플랫폼입니다.",
-        tech: ["React" , "Typescript", "Tailwindcss", "shadcn", "Zustand", "WebAudioApi", "Wavesurfer", "Render"],
-        domain: "https://github.com/stickfig8/simply-practice",
-        github: "https://github.com/stickfig8/simply-practice",
-        period: "25.07 ~ "
-    },
+    
 
 ]
