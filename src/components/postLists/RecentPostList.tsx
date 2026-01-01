@@ -1,9 +1,10 @@
 import { getLatestPostMetas } from "@/lib/postDataUtils";
 import PostList from "./PostList";
+import { RECENT_SIZE } from "@/config/commonConfigs";
 
 
 export default function RecentPostList() {
-    const latestPosts = getLatestPostMetas(3);
+    const latestPosts = getLatestPostMetas(RECENT_SIZE);
 
     return(
         <section className="my-3">

@@ -1,0 +1,75 @@
+---
+title: Simply Practice 제작기 (1)
+date: "2025-10-30"
+desc: React 개인 프로젝트 1탄 (개요 + 프로젝트 설명 + Web Audio API란)
+tags: ["SimplyPractice", "React", "Tailwindcss", "Vite", "shadcn", "Zustand", "WebAudioAPI"]
+---
+
+## 1. 개요
+### -새로운 개인 프로젝트
+&nbsp;팀 프로젝트가 끝나고 새로운 개인 프로젝트를 진행하고자 했습니다. 최근 밴드 혹은 악기 연주와 같은 취미생활이 많은 인기를 가짐에 따라, "마치 ==Duolingo==처럼 악기 연습을 할 수 있는 플랫폼을 만들 수 있었으면 좋겠다"라는 생각이 들었습니다.
+
+다른 학습 서비스 처럼 뚜렷한 컨텐츠를 제공하기는 장르 특성상 어렵다고 판단되어, 편의기능과 데이터 시각화에 중점을 두고 서비스를 기획하게 되었습니다. 
+
+제가 구현한 기능이 필요하시거나 새롭게 접해보시는 분들의 괜찮은 참고가 되었으면 합니다.
+
+*** 
+
+## 2. 프로젝트 설명
+### -Simply Practice
+&nbsp;==Simply Practice==악기 연습에 기본적으로 필요한 ==오디오 파일 재생==, ==메트로놈==, ==튜너== 등과 같은 기능을 제공하며, 각 연습은 로그 형식으로 기록을 저장 할 수 있습니다. 저장된 연습 기록들은 다양한 시각화를 통해 사용자에게 연습 패턴과 분포를 제공합니다.
+
+기본적인 오디오 관련 기능들은 ==Web Audio API== 혹은 이를 기반으로 한 ==라이브러리==를 이용하여 만들었고, 데이터 시각화 관련 기능들은 ==recharts==와 ==shadcn==의 조합으로 만들었습니다.
+
+*** 
+
+## 3. Web Audio API
+### -Web Audio API란
+&nbsp;먼저 프로젝트에서 가장 핵심적인 기능을 담당하는 오디오 기능들은 모두 ==Web Audio API==라는 ==API== 위에서 개발되었습니다. ==Web Audio API==는 브라우저 환경에서 오디오를 다루기 위한 ==저수준 API==로, 
+단순히 소리를 재생하는 것을 넘어서 오디오 신호의 생성, 분석, 조작, 시각화까지 모두 수행할 수 있는 기능입니다.
+
+기존에 오디오를 재생하기 위해 사용하는 태그인 `<audio>`가 단순한 미디어 플레이어라면, ==Web Audio API==는 음향 엔진에 더 가깝다고 할 수 있습니다.
+즉, 소리를 '틀어주는 것'이 아니라 '소리를 만들어내고 가공할 수 있는 구조'를 제공합니다.
+
+### -Web Audio API의 구조
+&nbsp;==Web Audio API== 노드 기반으로 설계되어있으며, 음원 혹은 소스에서 사용자까지 도달하는 오디오 신호의 흐름을 여러개의 ==AudioNode==로 구성합니다.
+예를들어, `[OscillatorNode] → [GainNode] → [AnalyserNode] → [Destination]` 와 같은 형태로 오디오 흐름을 구성할 수 있습니다. 각각의 노드는
+- OscillatorNode: 주파수 생성
+- GainNode: 음량 조절
+- AnalyserNode: 파형, 주파수 등 실시간 분석
+- Destination: 최종 출력장치(스피커 등)
+
+와 같은 역할을 하며, 순차적으로 연결되어 단방향 흐름을 보입니다. 
+
+이들 밖에도 오디오 데이터를 재생하는 ==AudioBufferSource==, 딜레이 효과를 생성하는 ==Delay==, 파형을 왜곡처리 해주는 ==WaveShaper==, 채널을 분할 / 병합 해주는 ==ChannelSplitter==, ==ChannelMerger==등이 있습니다.
+개발자는 이들을 필요에 따라 추가, 수정 할 수 있습니다.
+
+### -AudioContext란
+&nbsp;==AudioContext==는 ==Web Audio API==의 핵심 객체로, 모든 오디오 처리의 컨트롤 타워 역할을 수행합니다. 
+
+하나의 ==AudioContext==안에는 수 많은 ==AudioNode==들이 연결될 수 있고, 이를 통해 신호 흐름을 제어하고 관리할 수 있습니다.
+
+예를들어 상술한 구조의 경우
+
+```ts
+const audioCtx = new AudioContext();
+const oscillator = audioCtx.createOscillator();
+const gainNode = audioCtx.createGain();
+
+oscillator.connect(gainNode).connect(audioCtx.destination);
+oscillator.start();
+```
+
+와 같은 구조로 구현할 수 있습니다. 
+
+즉, ==AudioContext==는 오디오 신호의 근원이며, 모든 음원 재생, 분석, 처리 등을 이 컨텍스트 내부에서 수행하게 됩니다.
+
+***
+
+## -Simply Practice에서의 활용
+&nbsp;==Simply Practice==에서는 ==Web Audio API==를 직접 연결 및 제어하거나, 이를 기반으로 만들어진 ==Tone.js==, ==wavesurfer.js==와 같은 고수준 오디오 라이브러리를 함께 사용했습니다. 
+
+예를 들어, 음원 재생 같은 경우는 단순한 기능임에도 다양한 부가 기능이 필요하기 때문에 개발비용과 효율 측면에서 ==wavesurfer.js==를 채택했고, 튜너를 비롯한 사용자 오디오 장비 선택 및 연결 기능 같은 경우는 직접 ==Web Audio API==를 사용하여 개발을 진행했습니다.
+
+다음 게시물 부터는 각 기능을 어떻게 구현했는지, 혹은 다양한 트러블 슈팅에 대해 알아보도록 하겠습니다. 
+*** 

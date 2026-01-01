@@ -10,16 +10,16 @@ export function useCarouselController(posts: PostMetaWithCategory[]) {
     const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
 
     useEffect(() => {
-    if (!api) return;
+      if (!api) return;
 
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap());
-
-    api.on("select", () => {
+      setCount(api.scrollSnapList().length);
       setCurrent(api.selectedScrollSnap());
-      plugin.current?.reset();
-    });
-  }, [api, posts]);
+
+      api.on("select", () => {
+        setCurrent(api.selectedScrollSnap());
+        plugin.current?.reset();
+      });
+    }, [api, posts]);
 
   const movePrev = () => {
     const prevIndex = (current - 1 + count) % count;

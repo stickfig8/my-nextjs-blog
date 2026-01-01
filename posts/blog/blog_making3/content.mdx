@@ -83,7 +83,7 @@ export const MyMdxComponent : MDXComponents = {
   - ==rehype-highlight== : 코드 블록에 구문강조를 적용해줍니다. 코드의 여러 구문에 별도의 색상과 스타일을 입혀 가독성을 올려줍니다.
   - ==rehype-slug== : 모든 heading(==h1==, ==h2== ... )태그에 id를 자동으로 붙여줍니다. id값은 ``innerHTML``로 지정됩니다. 이후 구현할 ==게시물 네비게이터==에서 사용됩니다.
 
-여기서 ``MDXRemote``는 ==app/[category]/[slug]/page.tsx에서 게시물 페이지를 만들어 낼 때 사용됩니다.
+여기서 ``MDXRemote``는 ==app/[category]/[slug]/page.tsx==에서 게시물 페이지를 만들어 낼 때 사용됩니다.
 ```ts
 <PostContents content={data.content} />
 ```

@@ -1,0 +1,139 @@
+---
+title: Simply Practice 제작기 (5)
+date: "2025-12-10"
+desc: React 개인 프로젝트 5탄 (Carousel)
+tags: ["SimplyPractice", "React", "shadcn", "Carousel", "embla", "Tailwind"]
+---
+
+## 1. 문제 발생
+### -개요
+&nbsp;저는 다양한 프로젝트에서 카드 슬라이드 섹션의 구현에서 ==shadcn==의 ==Carousel== 컴포넌트를 자주 이용합니다. 구현이 쉽고 빠르다는 장점이 있고, ==Tailwind==를 통해서 기본 스타일에서의 수정도 간편하며, 마우스 드래그 뿐만 아니라 모바일 환경에서의 터치 이벤트도 기본적으로 대응되기 때문입니다.
+
+하지만 이번 프로젝트에서는 약간은 재밌는 이슈가 발생했습니다. ==Carousel==로 구성한 카드 목록 중에서 내부에 볼륨 컨트롤러와 같은 곳에서 쓰이는 가로 슬라이더가 포함되는 카드가 몇 개 있었던 것입니다.
+이 내부 슬라이더를 조작하면 ==Carousel==의 스크롤이 이벤트 버블링이 발생하여 같이 넘어가는 문제가 발생했습니다.
+
+<img src="/postImgs/blog/simplypractice5/1.gif" className="w-1/2 mx-auto rounded-md border-1 border-[var(--foreground)] mb-4" />
+
+단순한 이벤트 버블링이라고 생각하여 `e.stopPropagation()`등과 같은 방법을 사용해봤으나, ==Carousel==의 내부 엔진이 매우 강하게 결합된 이벤트 체인을 가지고 있는 것 같아 다른 방법을 강구해야만 했습니다.
+
+이러한 문제의 해결법을 ==Carousel==의 간단한 설명과 함께 한번 설명해보겠습니다.
+
+***
+
+## 2. Carousel
+### -Carousel 이란?
+&nbsp;==Carousel==은 ==shadcn==에서 제공하는 컴포넌트 중에 하나로, 여러장의 카드를 담아서 순차적으로 출력하고, 드래그나 스와이프로 이동하며 이전 혹은 다음 카드를 보여주는 역할을 하는 컴포넌트입니다.
+
+그 내부에는 [Embla Carousel](https://www.embla-carousel.com/)이라는 오픈 소스 슬라이더 라이브러리가 내부 엔진으로 들어가 있고, 이를 ==React==래퍼와 ==Tailwind== 스타일링으로 감싸 내어 우리가 편하게 바로 사용할 수 있는 컴포넌트입니다.
+
+기본 조작은 디폴트 구성과 간단한 ==Tailwind== 수정으로 할 수 있지만, 슬라이드 버튼 혹은 현재 인덱스 추적, 자동 스크롤과 같은 추가 기능은 ==Embla API==에 접근해야 합니다.
+
+### -API 접근과 사용
+&nbsp;==shadcn==에서 ==Carousel==를 사용할 때, ==Embla API==에 접근하는 방법은 간단합니다.
+
+```ts
+const [api, setApi] = useState<CarouselApi>();
+```
+와 같이 사용하면 되는데요, 이는 ==Carousel==의 ==API==에 접근 하는 것처럼 보이지만, 실제로는 내부 엔진인 ==Embla==의 ==API==를 조작하는 것입니다. ==CarouselApi==타입은 ==shadcn==에서 제공하는 ==API==접근용 타입입니다.
+
+이후에는 이 ==API==를 이용하여
+```ts
+const movePrev = () => {
+    const prevIndex = (current - 1 + count) % count;
+    api?.scrollTo(prevIndex);
+  };
+```
+와 같은 형태로 이용할 수 있습니다. 위에서 선언한 `setApi`는 
+
+```ts
+<Carousel setApi={setApi}>
+   <CarouselContent>
+```
+와 같이 작성한 컴포넌트의 `setApi`속성에 넣어주면 됩니다. 이후 같은 `api`를 공유하는 ==Carousel==의 하위 요소들은 위의 `api`를 조작하는 함수의 기능을 따릅니다.
+
+추가로, Embla Carousel에서는 다양한 플러그인(Plugin) 기능을 제공합니다.
+예를 들어 제가 자주 애용하는 자동 슬라이드 전환을 위한 Autoplay 플러그인은 다음과 같이 사용할 수 있습니다.
+```ts
+import Autoplay from "embla-carousel-autoplay";
+.
+.
+.
+  const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: true }));
+```
+이렇게 선언한 플러그인을 Carousel 컴포넌트에 전달하면, 5초 간격으로 자동으로 슬라이드가 넘어가는 기능을 손쉽게 구현할 수 있습니다.
+
+```ts
+<Carousel plugins={[plugin.current]} setApi={setApi}>
+   <CarouselContent>
+```
+즉, plugins prop에 Embla의 플러그인 인스턴스를 전달함으로써 Carousel의 동작 방식을 손쉽게 확장할 수 있습니다.
+> 블로그 메인화면의 배너가 해당 코드를 이용했습니다.
+
+***
+
+## 2. 문제 해결
+### - dragHandler
+&nbsp;앞서 말씀 드렸듯, ==Embla== 엔진은 내부적으로 매우 강하게 결합된 이벤트 체인을 가지고 있기 때문에, 흔히 사용하는 `e.stopPropagation()`이나 ==CSS==속성으로의 해결은 어려웠습니다.
+이 문제를 해결하기 위해, 보다 직접적인 접근법을 택했습니다. 바로 ==Embla==의 내부 엔진에서 ==dragHandler==를 직접 찾아 제어하는 방법입니다.
+
+>src/hooks/practice/useFunctionalCarousel.ts
+```ts
+import type { CarouselApi } from "@/components/ui/carousel";
+import { useCallback, useState } from "react";
+
+export function useFunctionalCarousel() {
+  const [api, setApi] = useState<CarouselApi>();
+
+  const disableScroll = useCallback(
+    () => api?.internalEngine().dragHandler.destroy(),
+    [api]
+  );
+  const enableScroll = useCallback(
+    () => api?.internalEngine().dragHandler.init(api),
+    [api]
+  );
+
+  return { setApi, disableScroll, enableScroll };
+}
+```
+에서의 `api?.internalEngine().dragHandler`구문을 통해 ==Embla== 내부의 `dragHandler`객체에 접근하고, 이를 `destroy()` / `init()`으로 제어하는 것입니다. 즉, 
+- `destroy()` : ==Embla==의 드래그 이벤트 리스너를 완전히 해제
+- `init()` : 다시 초기화하여 정상 동작 복원
+
+추가로 `useCallback`으로 감싸 `api`의 변경에 따른 함수의 불필요한 재생성을 방지하도록 최적화 했습니다.
+
+이후에는 
+
+>src/components/practicePage/FunctionalCarousel.tsx
+```ts
+<Carousel className="w-full hidden my-10 max-[600px]:block" setApi={setApi}>
+  <CarouselContent>
+    <CarouselCanvas title={text.metronome.metronome[lang]}>
+      <Metronome
+        handleSliderStart={disableScroll}
+        handleSliderEnd={enableScroll}
+      />
+    </CarouselCanvas>  
+```
+이렇게 정의된 함수를 props로 전달하고,
+슬라이더 컴포넌트 내부에서는 사용자의 조작 시점에 따라 Embla의 드래그 기능을 잠금/해제하도록 연결합니다.
+
+>src/components/practicePage/Metronome.tsx
+```ts
+<Slider
+  onPointerDown={handleSliderStart}
+  onPointerUp={handleSliderEnd}
+  onTouchStart={handleSliderStart}
+  onTouchEnd={handleSliderEnd}
+```
+
+이렇게 모든 작업이 완료되면 
+
+<img src="/postImgs/blog/simplypractice5/2.gif" className="w-1/2 mx-auto rounded-md border-1 border-[var(--foreground)] mb-4" />
+
+와 같이 문제가 해결됩니다.
+
+***
+
+## 3. 마치며
+&nbsp;이번 게시물에서는 ==Carousel==의 사용법과 이벤트 핸들러의 접근에 대해 알아보았습니다. 많이 부족하지만 좋은 참고가 되었으면 좋겠습니다. 감사합니다.
